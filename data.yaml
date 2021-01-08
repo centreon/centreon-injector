@@ -1,0 +1,18 @@
+timeperiod:
+  count: 3
+
+command:
+  count: 20
+
+host:
+  count: 100
+  template:
+    depth:
+      min: 0
+      max: 4
+
+service:
+  count: 2000
+  countPerHost:
+    min: 0
+    max: 30
