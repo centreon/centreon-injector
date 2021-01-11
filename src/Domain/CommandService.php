@@ -14,12 +14,12 @@ class CommandService implements InjectionServiceInterface
         $this->commandRepository = $commandRepository;
     }
 
-    public function inject(array $properties): array
+    public function inject(array $properties, array $injectedIds): array
     {
-        $commandRepository = new Command('cmd_name', 'echo ok');
-        $this->commandRepository->inject($commandRepository, $properties['count']);
+        $command = new Command('cmd_name', 'echo ok');
+        $ids = $this->commandRepository->inject($command, $properties['command']['count']);
 
-        return [];
+        return $ids;
     }
 
     public function purge()

@@ -5,7 +5,7 @@ command:
   count: 20
 
 host:
-  count: 100
+  count: 1000
   template:
     depth:
       min: 0

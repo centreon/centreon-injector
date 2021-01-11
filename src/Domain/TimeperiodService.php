@@ -14,12 +14,12 @@ class TimeperiodService implements InjectionServiceInterface
         $this->timeperiodRepository = $timeperiodRepository;
     }
 
-    public function inject(array $properties): array
+    public function inject(array $properties, array $injectedIds): array
     {
         $timeperiod = new Timeperiod('tp_name', 'tp_alias');
-        $this->timeperiodRepository->inject($timeperiod, $properties['count']);
+        $ids = $this->timeperiodRepository->inject($timeperiod, $properties['timeperiod']['count']);
 
-        return [];
+        return $ids;
     }
 
     public function purge()

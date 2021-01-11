@@ -17,8 +17,10 @@ class CommandRepository
         $this->connection = $connection;
     }
 
-    public function inject(Command $command, int $count)
+    public function inject(Command $command, int $count): array
     {
+        $ids = [];
+
         $result = $this->connection->query('SELECT MAX(command_id) AS max FROM command');
         $i = ((int) $result->fetch()['max']) + 1;
         $maxId = $i + $count;
@@ -31,6 +33,7 @@ class CommandRepository
         $line = $command->getLine();
         $type = $command->getType();
         for ($i; $i < $maxId; $i++) {
+            $ids[] = $i;
             $query .= '(' .
                 $i . ',' .
                 '"' . $name . $i . '",' .
@@ -41,6 +44,8 @@ class CommandRepository
         $query = rtrim($query, ',');
 
         $this->connection->query($query);
+
+        return $ids;
     }
 
     public function purge()

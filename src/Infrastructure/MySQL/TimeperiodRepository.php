@@ -17,8 +17,10 @@ class TimeperiodRepository
         $this->connection = $connection;
     }
 
-    public function inject(Timeperiod $timeperiod, int $count)
+    public function inject(Timeperiod $timeperiod, int $count): array
     {
+        $ids = [];
+
         $result = $this->connection->query('SELECT MAX(tp_id) AS max FROM timeperiod');
         $i = ((int) $result->fetch()['max']) + 1;
         $maxId = $i + $count;
@@ -32,6 +34,7 @@ class TimeperiodRepository
         $alias = $timeperiod->getAlias() . '_';
         $range = $timeperiod->getMondayRange();
         for ($i; $i < $maxId; $i++) {
+            $ids[] = $i;
             $query .= '(' .
                 $i . ',' .
                 '"' . $name . $i . '",' .
@@ -48,6 +51,8 @@ class TimeperiodRepository
         $query = rtrim($query, ',');
 
         $this->connection->query($query);
+
+        return $ids;
     }
 
     public function purge()

@@ -12,6 +12,7 @@ use Symfony\Component\Yaml\Yaml;
 use App\Domain\InjectionServiceInterface;
 use App\Domain\TimeperiodService;
 use App\Domain\CommandService;
+use App\Domain\HostService;
 
 class InjectData extends Command
 {
@@ -22,11 +23,19 @@ class InjectData extends Command
 
     private $timeperiodService;
     private $commandService;
+    private $hostService;
+
+    private $ids = [
+        'timeperiod' => [],
+        'command' => [],
+        'host' => [],
+    ];
 
     public function __construct(
         ContainerService $containerService,
         TimeperiodService $timeperiodService,
-        CommandService $commandService
+        CommandService $commandService,
+        HostService $hostService
     ) {
         parent::__construct();
 
@@ -34,6 +43,7 @@ class InjectData extends Command
 
         $this->timeperiodService = $timeperiodService;
         $this->commandService = $commandService;
+        $this->hostService = $hostService;
     }
 
     protected function configure()
@@ -116,6 +126,7 @@ class InjectData extends Command
 
             $this->purge('timeperiod', $this->timeperiodService, $output);
             $this->purge('command', $this->commandService, $output);
+            $this->purge('host', $this->hostService, $output);
         }
 
 
@@ -125,12 +136,12 @@ class InjectData extends Command
             '==============',
         ]);
 
-        $this->inject('timeperiod', $this->timeperiodService, $configuration, $output);
-        $this->inject('command', $this->commandService, $configuration, $output);
-        //$this->inject('host', $this->hostService, $configuration, $output);
+        $this->ids['timeperiod'] = $this->inject('timeperiod', $this->timeperiodService, $configuration, $output);
+        $this->ids['command'] = $this->inject('command', $this->commandService, $configuration, $output);
+        $this->ids['host'] = $this->inject('host', $this->hostService, $configuration, $output);
 
-        shell_exec('docker kill ' . $container->getId());
-        shell_exec('docker rm ' . $container->getId());
+        //shell_exec('docker kill ' . $container->getId());
+        //shell_exec('docker rm ' . $container->getId());
 
         return Command::SUCCESS;
     }
@@ -152,7 +163,7 @@ class InjectData extends Command
         OutputInterface $output
     ): array {
         $output->write('Injecting ' . $name . 's ... ');
-        $injectedObjects = $injectionService->inject($configuration[$name]);
+        $injectedObjects = $injectionService->inject($configuration, $this->ids);
         $output->writeln('<fg=green>OK</>');
 
         return $injectedObjects;
