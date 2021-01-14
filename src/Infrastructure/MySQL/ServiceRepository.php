@@ -3,9 +3,9 @@
 namespace App\Infrastructure\MySQL;
 
 use Doctrine\DBAL\Driver\Connection;
-use App\Domain\Host;
+use App\Domain\Service;
 
-class HostRepository
+class ServiceRepository
 {
     /**
      * @var Connection
@@ -17,31 +17,29 @@ class HostRepository
         $this->connection = $connection;
     }
 
-    public function inject(Host $host, int $count, array $injectedIds): array
+    public function inject(Service $service, int $count, array $injectedIds): array
     {
         $ids = [];
 
-        $result = $this->connection->query('SELECT MAX(host_id) AS max FROM host');
+        $result = $this->connection->query('SELECT MAX(service_id) AS max FROM service');
         $firstId = ((int) $result->fetch()['max']) + 1;
         $maxId = $firstId + $count;
 
-        $baseQuery = 'INSERT INTO host ' .
-            '(host_id, host_name, host_alias, host_address, host_register, command_command_id) ' .
+        $baseQuery = 'INSERT INTO service ' .
+            '(service_id, service_description, service_alias, service_register, command_command_id) ' .
             'VALUES ';
         $valuesQuery = '';
 
-        $name = $host->getName() . '_';
-        $alias = $host->getAlias() . '_';
-        $address = $host->getAddress();
+        $description = $service->getDescription() . '_';
+        $alias = $service->getAlias() . '_';
         $insertCount = 0;
         for ($i = $firstId; $i < $maxId; $i++) {
             $ids[] = $i;
             $insertCount++;
             $valuesQuery .= '(' .
                 $i . ',' .
-                '"' . $name . $i . '",' .
+                '"' . $description . $i . '",' .
                 '"' . $alias . $i . '",' .
-                '"' . $address . '",' .
                 '"1",' .
                 $injectedIds['command'][array_rand($injectedIds['command'], 1)] .
                 '),';
@@ -58,15 +56,15 @@ class HostRepository
             $this->connection->query($query);
         }
 
-        $baseQuery = 'INSERT INTO ns_host_relation ' .
-            '(nagios_server_id, host_host_id) ' .
+        $baseQuery = 'INSERT INTO host_service_relation ' .
+            '(host_host_id, service_service_id) ' .
             'VALUES ';
         $valuesQuery = '';
 
         $insertCount = 0;
         for ($i = $firstId; $i < $maxId; $i++) {
             $insertCount++;
-            $valuesQuery .= '(' . $injectedIds['poller'][array_rand($injectedIds['poller'], 1)] . ',' . $i . '),';
+            $valuesQuery .= '(' . $injectedIds['host'][array_rand($injectedIds['host'], 1)] . ',' . $i . '),';
 
             if ($insertCount === 50000) {
                 $query = rtrim($baseQuery . $valuesQuery, ',');
@@ -86,6 +84,6 @@ class HostRepository
 
     public function purge()
     {
-        $this->connection->query('TRUNCATE host');
+        $this->connection->query('TRUNCATE service');
     }
 }

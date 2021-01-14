@@ -13,6 +13,7 @@ use App\Domain\InjectionServiceInterface;
 use App\Domain\TimeperiodService;
 use App\Domain\CommandService;
 use App\Domain\HostService;
+use App\Domain\ServiceService;
 
 class InjectData extends Command
 {
@@ -24,6 +25,7 @@ class InjectData extends Command
     private $timeperiodService;
     private $commandService;
     private $hostService;
+    private $serviceService;
 
     private $ids = [
         'timeperiod' => [],
@@ -35,7 +37,8 @@ class InjectData extends Command
         ContainerService $containerService,
         TimeperiodService $timeperiodService,
         CommandService $commandService,
-        HostService $hostService
+        HostService $hostService,
+        ServiceService $serviceService
     ) {
         parent::__construct();
 
@@ -44,6 +47,7 @@ class InjectData extends Command
         $this->timeperiodService = $timeperiodService;
         $this->commandService = $commandService;
         $this->hostService = $hostService;
+        $this->serviceService = $serviceService;
     }
 
     protected function configure()
@@ -127,6 +131,7 @@ class InjectData extends Command
             $this->purge('timeperiod', $this->timeperiodService, $output);
             $this->purge('command', $this->commandService, $output);
             $this->purge('host', $this->hostService, $output);
+            $this->purge('service', $this->serviceService, $output);
         }
 
 
@@ -139,6 +144,7 @@ class InjectData extends Command
         $this->ids['timeperiod'] = $this->inject('timeperiod', $this->timeperiodService, $configuration, $output);
         $this->ids['command'] = $this->inject('command', $this->commandService, $configuration, $output);
         $this->ids['host'] = $this->inject('host', $this->hostService, $configuration, $output);
+        $this->ids['service'] = $this->inject('service', $this->serviceService, $configuration, $output);
 
         //shell_exec('docker kill ' . $container->getId());
         //shell_exec('docker rm ' . $container->getId());

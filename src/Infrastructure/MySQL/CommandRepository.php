@@ -30,7 +30,7 @@ class CommandRepository
             'VALUES ';
 
         $name = $command->getName() . '_';
-        $line = $command->getLine();
+        $line = addslashes($command->getLine());
         $type = $command->getType();
         for ($i; $i < $maxId; $i++) {
             $ids[] = $i;

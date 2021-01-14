@@ -5,14 +5,14 @@ command:
   count: 20
 
 host:
-  count: 1000
+  count: 10
   template:
     depth:
       min: 0
       max: 4
 
 service:
-  count: 2000
+  count: 50
   countPerHost:
     min: 0
     max: 30
