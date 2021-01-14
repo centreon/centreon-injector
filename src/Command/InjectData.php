@@ -15,6 +15,10 @@ use App\Domain\CommandService;
 use App\Domain\ContactService;
 use App\Domain\HostService;
 use App\Domain\ServiceService;
+use App\Domain\HostgroupService;
+use App\Domain\ServicegroupService;
+use App\Domain\HostCategoryService;
+use App\Domain\ServiceCategoryService;
 
 class InjectData extends Command
 {
@@ -28,6 +32,10 @@ class InjectData extends Command
     private $contactService;
     private $hostService;
     private $serviceService;
+    private $hostgroupService;
+    private $servicegroupService;
+    private $hostcategoryService;
+    private $servicecategoryService;
 
     private $ids = [
         'timeperiod' => [],
@@ -35,6 +43,10 @@ class InjectData extends Command
         'contact' => [],
         'host' => [],
         'service' => [],
+        'hostgroup' => [],
+        'servicegroup' => [],
+        'hostcategory' => [],
+        'servicecategory' => [],
     ];
 
     /**
@@ -46,6 +58,10 @@ class InjectData extends Command
      * @param ContactService $contactService
      * @param HostService $hostService
      * @param ServiceService $serviceService
+     * @param HostgroupService $hostgroupService
+     * @param ServicegroupService $servicegroupService
+     * @param HostCategoryService $hostCategoryService
+     * @param ServiceCategoryService $serviceCategoryService
      */
     public function __construct(
         ContainerService $containerService,
@@ -53,7 +69,11 @@ class InjectData extends Command
         CommandService $commandService,
         ContactService $contactService,
         HostService $hostService,
-        ServiceService $serviceService
+        ServiceService $serviceService,
+        HostgroupService $hostgroupService,
+        ServicegroupService $servicegroupService,
+        HostCategoryService $hostCategoryService,
+        ServiceCategoryService $serviceCategoryService
     ) {
         parent::__construct();
 
@@ -64,6 +84,10 @@ class InjectData extends Command
         $this->contactService = $contactService;
         $this->hostService = $hostService;
         $this->serviceService = $serviceService;
+        $this->hostgroupService = $hostgroupService;
+        $this->servicegroupService = $servicegroupService;
+        $this->hostCategoryService = $hostCategoryService;
+        $this->serviceCategoryService = $serviceCategoryService;
     }
 
     /**
@@ -171,9 +195,13 @@ class InjectData extends Command
                 '============',
             ]);
 
+            $this->purge('service categorie', $this->serviceCategoryService, $output);
+            $this->purge('host categorie', $this->hostCategoryService, $output);
+            $this->purge('servicegroup', $this->servicegroupService, $output);
+            $this->purge('hostgroup', $this->hostgroupService, $output);
             $this->purge('service', $this->serviceService, $output);
             $this->purge('host', $this->hostService, $output);
-            $this->purge('contact', $this->timeperiodService, $output);
+            $this->purge('contact', $this->contactService, $output);
             $this->purge('timeperiod', $this->timeperiodService, $output);
             $this->purge('command', $this->commandService, $output);
         }
@@ -190,6 +218,20 @@ class InjectData extends Command
         $this->ids['contact'] = $this->inject('contact', $this->contactService, $configuration, $output);
         $this->ids['host'] = $this->inject('host', $this->hostService, $configuration, $output);
         $this->ids['service'] = $this->inject('service', $this->serviceService, $configuration, $output);
+        $this->ids['hostgroup'] = $this->inject('hostgroup', $this->hostgroupService, $configuration, $output);
+        $this->ids['servicegroup'] = $this->inject('servicegroup', $this->servicegroupService, $configuration, $output);
+        $this->ids['host_category'] = $this->inject(
+            'host categorie',
+            $this->hostCategoryService,
+            $configuration,
+            $output
+        );
+        $this->ids['service_category'] = $this->inject(
+            'service categorie',
+            $this->serviceCategoryService,
+            $configuration,
+            $output
+        );
 
         return Command::SUCCESS;
     }
