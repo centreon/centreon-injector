@@ -37,6 +37,16 @@ class InjectData extends Command
         'service' => [],
     ];
 
+    /**
+     * Constructor
+     *
+     * @param ContainerService $containerService
+     * @param TimeperiodService $timeperiodService
+     * @param CommandService $commandService
+     * @param ContactService $contactService
+     * @param HostService $hostService
+     * @param ServiceService $serviceService
+     */
     public function __construct(
         ContainerService $containerService,
         TimeperiodService $timeperiodService,
@@ -56,6 +66,9 @@ class InjectData extends Command
         $this->serviceService = $serviceService;
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function configure()
     {
         $this
@@ -97,14 +110,23 @@ class InjectData extends Command
             );
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function interact(InputInterface $input, OutputInterface $output)
     {
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $useDocker = $input->getOption('docker');
@@ -172,6 +194,14 @@ class InjectData extends Command
         return Command::SUCCESS;
     }
 
+    /**
+     * Purge data
+     *
+     * @param string $name
+     * @param InjectionServiceInterface $injectionService
+     * @param OutputInterface $output
+     * @return void
+     */
     private function purge(
         string $name,
         InjectionServiceInterface $injectionService,
@@ -182,6 +212,15 @@ class InjectData extends Command
         $output->writeln('<fg=green>OK</>');
     }
 
+    /**
+     * Inject data
+     *
+     * @param string $name
+     * @param InjectionServiceInterface $injectionService
+     * @param array $configuration
+     * @param OutputInterface $output
+     * @return array
+     */
     private function inject(
         string $name,
         InjectionServiceInterface $injectionService,
