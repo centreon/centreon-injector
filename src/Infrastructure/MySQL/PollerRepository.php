@@ -25,6 +25,10 @@ class PollerRepository
             $ids[] = $poller['id'];
         }
 
+        if (empty($ids)) {
+            throw new \Exception('At least one poller must be enabled');
+        }
+
         return $ids;
     }
 }
