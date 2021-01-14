@@ -27,6 +27,11 @@ composer install
 
 Edit file `data.yaml` to configure objects to inject
 
+> :warning: **If you are not using docker**, you need to configure connection in `.env` file :
+> ```
+> DATABASE_URL="mysql://<user>:<password>@<ip_address>:<port>/<database_name>?serverVersion=5.7"
+> ```
+
 ## Usage
 
 ### Basic usage
