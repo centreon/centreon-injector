@@ -17,7 +17,7 @@ class ServiceService implements InjectionServiceInterface
     public function inject(array $properties, array $injectedIds): array
     {
         $service = new Service('service_name', 'service_description');
-        $ids = $this->serviceRepository->inject($service, $properties['service']['count'], $injectedIds);
+        $ids = $this->serviceRepository->inject($service, $properties, $injectedIds);
 
         return $ids;
     }

@@ -12,14 +12,24 @@ class CommandRepository
      */
     private $connection;
 
+    private const PROPERTY_NAME = 'command';
+
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
     }
 
-    public function inject(Command $command, int $count): array
+    public function inject(Command $command, array $properties, array $injectedIds): array
     {
         $ids = [];
+
+        $count = $properties[self::PROPERTY_NAME]['count'];
+        $minMetricsCount = isset($properties[self::PROPERTY_NAME]['metrics']['min'])
+            ? $properties[self::PROPERTY_NAME]['metrics']['min']
+            : 0;
+        $maxMetricsCount = isset($properties[self::PROPERTY_NAME]['metrics']['max'])
+            ? $properties[self::PROPERTY_NAME]['metrics']['max']
+            : 10;
 
         $result = $this->connection->query('SELECT MAX(command_id) AS max FROM command');
         $i = ((int) $result->fetch()['max']) + 1;
@@ -30,14 +40,20 @@ class CommandRepository
             'VALUES ';
 
         $name = $command->getName() . '_';
-        $line = addslashes($command->getLine());
+        $line = $command->getLine();
         $type = $command->getType();
         for ($i; $i < $maxId; $i++) {
+            $lineWithMetrics = addslashes(
+                $line .
+                ' --metrics-count ' . random_int($minMetricsCount, $maxMetricsCount) . ' ' .
+                '--metrics-name "metric" ' .
+                '--metrics-values-range "-10000:10000"'
+            );
             $ids[] = $i;
             $query .= '(' .
                 $i . ',' .
                 '"' . $name . $i . '",' .
-                '"' . $line . '",' .
+                '"' . $lineWithMetrics . '",' .
                 $type .
                 '),';
         }

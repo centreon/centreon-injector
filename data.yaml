@@ -1,18 +1,17 @@
 timeperiod:
   count: 3
 
+contact:
+  count: 10
+
 command:
   count: 20
+  metrics:
+    min: 0
+    max: 30
 
 host:
   count: 10
-  template:
-    depth:
-      min: 0
-      max: 4
 
 service:
   count: 50
-  countPerHost:
-    min: 0
-    max: 30

@@ -12,6 +12,7 @@ use Symfony\Component\Yaml\Yaml;
 use App\Domain\InjectionServiceInterface;
 use App\Domain\TimeperiodService;
 use App\Domain\CommandService;
+use App\Domain\ContactService;
 use App\Domain\HostService;
 use App\Domain\ServiceService;
 
@@ -24,19 +25,23 @@ class InjectData extends Command
 
     private $timeperiodService;
     private $commandService;
+    private $contactService;
     private $hostService;
     private $serviceService;
 
     private $ids = [
         'timeperiod' => [],
         'command' => [],
+        'contact' => [],
         'host' => [],
+        'service' => [],
     ];
 
     public function __construct(
         ContainerService $containerService,
         TimeperiodService $timeperiodService,
         CommandService $commandService,
+        ContactService $contactService,
         HostService $hostService,
         ServiceService $serviceService
     ) {
@@ -46,6 +51,7 @@ class InjectData extends Command
 
         $this->timeperiodService = $timeperiodService;
         $this->commandService = $commandService;
+        $this->contactService = $contactService;
         $this->hostService = $hostService;
         $this->serviceService = $serviceService;
     }
@@ -56,11 +62,18 @@ class InjectData extends Command
             ->setDescription('Inject data in Centreon')
             ->setHelp('This command allows you to inject centreon objects directly in database...')
             ->addOption(
+                'docker',
+                null,
+                InputOption::VALUE_NONE,
+                'Start docker container instead of configured database connection',
+                null
+            )
+            ->addOption(
                 'docker-image',
                 'i',
                 InputOption::VALUE_OPTIONAL,
                 'Docker image to use',
-                'registry.centreon.com/mon-web-21.04:centos7'
+                'registry.centreon.com/mon-web-master:centos7'
             )
             ->addOption(
                 'container-id',
@@ -94,6 +107,7 @@ class InjectData extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $useDocker = $input->getOption('docker');
         $dockerImage = $input->getOption('docker-image');
         $containerId = $input->getOption('container-id');
 
@@ -109,17 +123,24 @@ class InjectData extends Command
 
         $configuration = Yaml::parseFile($filePath);
 
-        $output->writeln([
-            '',
-            'Running container',
-            '=================',
-        ]);
-        $container = $this->containerService->run($dockerImage, $containerId);
-        $output->writeln([
-            'Container Id : ' . $container->getId(),
-            'URL          : http://127.0.0.1:' . $container->getHttpPort() . '/centreon',
-            'MySQL        : mysql -u root -pcentreon -P ' . $container->getMysqlPort(),
-        ]);
+        if ($useDocker === true) {
+            $output->writeln([
+                '',
+                'Starting container',
+                '==================',
+            ]);
+            $container = $this->containerService->run($dockerImage, $containerId);
+            $output->writeln([
+                'Container Id : ' . $container->getId(),
+                'URL          : http://127.0.0.1:' . $container->getHttpPort() . '/centreon',
+                'MySQL        : mysql -u root -pcentreon -P ' . $container->getMysqlPort(),
+            ]);
+        } else {
+            $output->writeln([
+                '',
+                'Using database connection configured in .env file',
+            ]);
+        }
 
         if ($purge === true) {
             $output->writeln([
@@ -128,10 +149,11 @@ class InjectData extends Command
                 '============',
             ]);
 
+            $this->purge('service', $this->serviceService, $output);
+            $this->purge('host', $this->hostService, $output);
+            $this->purge('contact', $this->timeperiodService, $output);
             $this->purge('timeperiod', $this->timeperiodService, $output);
             $this->purge('command', $this->commandService, $output);
-            $this->purge('host', $this->hostService, $output);
-            $this->purge('service', $this->serviceService, $output);
         }
 
 
@@ -143,11 +165,9 @@ class InjectData extends Command
 
         $this->ids['timeperiod'] = $this->inject('timeperiod', $this->timeperiodService, $configuration, $output);
         $this->ids['command'] = $this->inject('command', $this->commandService, $configuration, $output);
+        $this->ids['contact'] = $this->inject('contact', $this->contactService, $configuration, $output);
         $this->ids['host'] = $this->inject('host', $this->hostService, $configuration, $output);
         $this->ids['service'] = $this->inject('service', $this->serviceService, $configuration, $output);
-
-        //shell_exec('docker kill ' . $container->getId());
-        //shell_exec('docker rm ' . $container->getId());
 
         return Command::SUCCESS;
     }

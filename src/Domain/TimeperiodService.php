@@ -17,7 +17,7 @@ class TimeperiodService implements InjectionServiceInterface
     public function inject(array $properties, array $injectedIds): array
     {
         $timeperiod = new Timeperiod('tp_name', 'tp_alias');
-        $ids = $this->timeperiodRepository->inject($timeperiod, $properties['timeperiod']['count']);
+        $ids = $this->timeperiodRepository->inject($timeperiod, $properties, $injectedIds);
 
         return $ids;
     }

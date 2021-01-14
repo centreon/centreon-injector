@@ -18,11 +18,13 @@ class CommandService implements InjectionServiceInterface
     {
         $command = new Command(
             'cmd_name',
-            'perl /usr/local/src/centreon-plugins/centreon_plugins.pl --plugin apps::centreon::local::plugin --mode not-so-dummy ' .
+            'perl /usr/lib/centreon/plugins/centreon_plugins.pl --plugin apps::centreon::local::plugin ' .
+            '--mode not-so-dummy ' .
+            '--statefile-dir "/tmp" ' .
             '--status-sequence "ok,critical,warning,ok,ok,critical,critical,critical,ok,ok,ok,ok,ok,ok,ok" ' .
-            '--output "this is the output"'
+            '--output "output"'
         );
-        $ids = $this->commandRepository->inject($command, $properties['command']['count']);
+        $ids = $this->commandRepository->inject($command, $properties, $injectedIds);
 
         return $ids;
     }

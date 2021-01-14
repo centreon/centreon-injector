@@ -12,14 +12,18 @@ class HostRepository
      */
     private $connection;
 
+    private const PROPERTY_NAME = 'command';
+
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
     }
 
-    public function inject(Host $host, int $count, array $injectedIds): array
+    public function inject(Host $host, array $properties, array $injectedIds): array
     {
         $ids = [];
+
+        $count = $properties[self::PROPERTY_NAME]['count'];
 
         $result = $this->connection->query('SELECT MAX(host_id) AS max FROM host');
         $firstId = ((int) $result->fetch()['max']) + 1;

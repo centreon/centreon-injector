@@ -22,7 +22,7 @@ class HostService implements InjectionServiceInterface
         $injectedIds['poller'] = $this->pollerRepository->getPollerIds();
 
         $host = new Host('host_name', 'host_alias', '127.0.0.1');
-        $ids = $this->hostRepository->inject($host, $properties['host']['count'], $injectedIds);
+        $ids = $this->hostRepository->inject($host, $properties, $injectedIds);
 
         return $ids;
     }

@@ -12,14 +12,18 @@ class TimeperiodRepository
      */
     private $connection;
 
+    private const PROPERTY_NAME = 'timeperiod';
+
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
     }
 
-    public function inject(Timeperiod $timeperiod, int $count): array
+    public function inject(Timeperiod $timeperiod, array $properties, array $injectedIds): array
     {
         $ids = [];
+
+        $count = $properties[self::PROPERTY_NAME]['count'];
 
         $result = $this->connection->query('SELECT MAX(tp_id) AS max FROM timeperiod');
         $i = ((int) $result->fetch()['max']) + 1;

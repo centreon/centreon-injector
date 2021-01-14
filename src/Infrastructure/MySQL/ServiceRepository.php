@@ -12,14 +12,18 @@ class ServiceRepository
      */
     private $connection;
 
+    private const PROPERTY_NAME = 'service';
+
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
     }
 
-    public function inject(Service $service, int $count, array $injectedIds): array
+    public function inject(Service $service, array $properties, array $injectedIds): array
     {
         $ids = [];
+
+        $count = $properties[self::PROPERTY_NAME]['count'];
 
         $result = $this->connection->query('SELECT MAX(service_id) AS max FROM service');
         $firstId = ((int) $result->fetch()['max']) + 1;
