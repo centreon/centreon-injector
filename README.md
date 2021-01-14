@@ -3,6 +3,7 @@ Inject centreon objects directly in database
 
 ## Prerequisites
 
+* git
 * php 7.2
 * php-yaml module
 * composer
