@@ -16,11 +16,17 @@ class PollerRepository
         $this->connection = $connection;
     }
 
-    public function getPollerIds(): array
+    public function getPollerIds(array $properties): array
     {
         $ids = [];
 
-        $result = $this->connection->query('SELECT id FROM nagios_server WHERE ns_activate = "1"');
+        $query = 'SELECT id FROM nagios_server WHERE ns_activate = "1"';
+
+        if (isset($properties['poller']['hostsOnCentral']) && $properties['poller']['hostsOnCentral'] === false) {
+            $query .= ' AND localhost = "0"';
+        }
+
+        $result = $this->connection->query($query);
         while ($poller = $result->fetch()) {
             $ids[] = $poller['id'];
         }

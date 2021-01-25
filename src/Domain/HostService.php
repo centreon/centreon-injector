@@ -19,7 +19,7 @@ class HostService implements InjectionServiceInterface
 
     public function inject(array $properties, array $injectedIds): array
     {
-        $injectedIds['poller'] = $this->pollerRepository->getPollerIds();
+        $injectedIds['poller'] = $this->pollerRepository->getPollerIds($properties);
 
         $host = new Host('host_name', 'host_alias', '127.0.0.1');
         $ids = $this->hostRepository->inject($host, $properties, $injectedIds);

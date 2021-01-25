@@ -1,41 +1,44 @@
+poller:
+  hostsOnCentral: true
+
 timeperiod:
-  count: 3
+  count: 100
 
 contact:
-  count: 10
+  count: 200
 
 command:
-  count: 20
+  count: 150
   metrics:
     min: 0
     max: 30
 
 host:
-  count: 10
+  count: 200
 
 service:
-  count: 50
+  count: 10000
 
 hostgroup:
-  count: 10
+  count: 50
   hosts:
     min: 0
-    max: 10
+    max: 200
 
 servicegroup:
-  count: 10
+  count: 60
   services:
     min: 0
-    max: 10
+    max: 300
 
 host_category:
-  count: 10
+  count: 20
   hosts:
     min: 0
     max: 10
 
 service_category:
-  count: 10
+  count: 30
   hosts:
     min: 0
-    max: 10
+    max: 30
