@@ -1,44 +1,44 @@
 poller:
-  hostsOnCentral: true
+  hostsOnCentral: true # dispatch hosts on central server ?
 
 timeperiod:
-  count: 100
+  count: 100 # count of injected timeperiods
 
 contact:
-  count: 200
+  count: 200 # count of injected timeperiods (non admin users)
 
 command:
-  count: 150
+  count: 150 # count of injected commands
   metrics:
-    min: 0
-    max: 30
+    min: 0 # minimum count of metrics per service
+    max: 30 # maximum count of metrics per service
 
 host:
-  count: 200
+  count: 200 # count of injected hosts
 
 service:
-  count: 10000
+  count: 10000 # count of injected services (randomly linked to a host)
 
 hostgroup:
-  count: 50
+  count: 50 # count of injected hostgroups
   hosts:
-    min: 0
-    max: 200
+    min: 0 # minimum count of hosts linked to a group
+    max: 200 # maximum count of hosts linked to a group
 
 servicegroup:
-  count: 60
+  count: 60 # count of injected servicegroups
   services:
-    min: 0
-    max: 300
+    min: 0 # minimum count of services linked to a group
+    max: 300 # maximum count of services linked to a group
 
 host_category:
-  count: 20
+  count: 20 # count of injected host categories
   hosts:
-    min: 0
-    max: 10
+    min: 0 # minimum count of hosts linked to a category
+    max: 10 # maximum count of hosts linked to a category
 
 service_category:
-  count: 30
+  count: 30 # count of injected service categories
   hosts:
-    min: 0
-    max: 30
+    min: 0 # minimum count of services linked to a category
+    max: 30 # maximum count of services linked to a category
