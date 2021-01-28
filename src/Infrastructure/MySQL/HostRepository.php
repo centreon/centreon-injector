@@ -12,7 +12,7 @@ class HostRepository
      */
     private $connection;
 
-    private const PROPERTY_NAME = 'command';
+    private const PROPERTY_NAME = 'host';
 
     public function __construct(Connection $connection)
     {
