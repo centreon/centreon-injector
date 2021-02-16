@@ -21,7 +21,6 @@ class CommandService implements InjectionServiceInterface
             'perl /usr/lib/centreon/plugins/centreon_plugins.pl --plugin apps::centreon::local::plugin ' .
             '--mode not-so-dummy ' .
             '--statefile-dir "/tmp" ' .
-            '--status-sequence "ok,critical,warning,ok,ok,critical,critical,critical,ok,ok,ok,ok,ok,ok,ok" ' .
             '--output "output"'
         );
         $ids = $this->commandRepository->inject($command, $properties, $injectedIds);

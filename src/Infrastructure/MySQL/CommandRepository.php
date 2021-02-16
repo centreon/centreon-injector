@@ -24,15 +24,10 @@ class CommandRepository
         $ids = [];
 
         $count = $properties[self::PROPERTY_NAME]['count'];
-        $minMetricsCount = isset($properties[self::PROPERTY_NAME]['metrics']['min'])
-            ? $properties[self::PROPERTY_NAME]['metrics']['min']
-            : 0;
-        $maxMetricsCount = isset($properties[self::PROPERTY_NAME]['metrics']['max'])
-            ? $properties[self::PROPERTY_NAME]['metrics']['max']
-            : 10;
 
         $result = $this->connection->query('SELECT MAX(command_id) AS max FROM command');
         $i = ((int) $result->fetch()['max']) + 1;
+        $firstId = $i;
         $maxId = $i + $count;
 
         $query = 'INSERT INTO command ' .
@@ -43,12 +38,22 @@ class CommandRepository
         $line = $command->getLine();
         $type = $command->getType();
         for ($i; $i < $maxId; $i++) {
-            $lineWithMetrics = addslashes(
-                $line .
-                ' --metrics-count ' . random_int($minMetricsCount, $maxMetricsCount) . ' ' .
-                '--metrics-name "metric" ' .
-                '--metrics-values-range "-10000:10000"'
-            );
+            if ($i === $firstId) {
+                // first injected command is host command
+                $lineWithMetrics = addslashes(
+                    $line .
+                    ' --host ' .
+                    ' --status-sequence "up,up,up,up,up,up,down,up,up,up,up,up,up,up,up,up,up,down,down,down" '
+                );
+            } else {
+                $lineWithMetrics = addslashes(
+                    $line .
+                    ' --status-sequence "ok,ok,ok,ok,ok,critical,warning,ok,ok,critical,critical,critical,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,unknown,unknown,unknown"' .
+                    ' --metrics-count $_SERVICEMETRICCOUNT$ ' .
+                    '--metrics-name "metric" ' .
+                    '--metrics-values-range "$_SERVICEMETRICMINRANGE$:$_SERVICEMETRICMAXRANGE$"'
+                );
+            }
             $ids[] = $i;
             $query .= '(' .
                 $i . ',' .

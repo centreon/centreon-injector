@@ -47,7 +47,7 @@ class HostRepository
                 '"' . $alias . $i . '",' .
                 '"' . $address . '",' .
                 '"1",' .
-                $injectedIds['command'][array_rand($injectedIds['command'], 1)] .
+                $injectedIds['command'][0] .
                 '),';
             if ($insertCount === 50000) {
                 $query = rtrim($baseQuery . $valuesQuery, ',');

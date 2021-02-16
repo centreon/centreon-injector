@@ -10,7 +10,7 @@ contact:
 command:
   count: 150 # count of injected commands
   metrics:
-    min: 0 # minimum count of metrics per service
+    min: 1 # minimum count of metrics per service
     max: 30 # maximum count of metrics per service
 
 host:
