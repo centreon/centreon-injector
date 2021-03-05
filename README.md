@@ -47,7 +47,7 @@ Edit file `data.yaml` to configure objects to inject
 
 Options:
       --docker                                 Start docker container instead of configured database connection
-  -i, --docker-image[=DOCKER-IMAGE]            Docker image to use [default: "registry.centreon.com/mon-web-master:centos7"]
+  -i, --docker-image[=DOCKER-IMAGE]            Docker image to use [default: "registry.centreon.com/des-bam-master:centos7"]
       --container-id[=CONTAINER-ID]            Existing container id to use
   -c, --configurationFile[=CONFIGURATIONFILE]  Configuration file path [default: "data.yaml"]
   -p, --purge                                  Purge data

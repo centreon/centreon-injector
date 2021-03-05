@@ -77,7 +77,8 @@ class ServiceCategoryRepository
             $hostCount = random_int($minServicesCount, $maxServicesCount);
             for ($j = 0; $j < $hostCount; $j++) {
                 $insertCount++;
-                $valuesQuery .= '(' . $i . ',' . $injectedIds['service'][array_rand($injectedIds['service'], 1)] . '),';
+                $valuesQuery .= '(' . $i . ',' .
+                    $injectedIds['service'][array_rand($injectedIds['service'], 1)]['service_id'] . '),';
 
                 if ($insertCount === 50000) {
                     $query = rtrim($baseQuery . $valuesQuery, ',');

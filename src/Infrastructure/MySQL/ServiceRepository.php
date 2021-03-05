@@ -40,7 +40,6 @@ class ServiceRepository
         $alias = $service->getAlias() . '_';
         $insertCount = 0;
         for ($i = $firstId; $i < $maxId; $i++) {
-            $ids[] = $i;
             $insertCount++;
             $valuesQuery .= '(' .
                 $i . ',' .
@@ -110,8 +109,13 @@ class ServiceRepository
 
         $insertCount = 0;
         for ($i = $firstId; $i < $maxId; $i++) {
+            $hostId = $injectedIds['host'][array_rand($injectedIds['host'], 1)];
+            $ids[] = [
+                'host_id' => $hostId,
+                'service_id' => $i,
+            ];
             $insertCount++;
-            $valuesQuery .= '(' . $injectedIds['host'][array_rand($injectedIds['host'], 1)] . ',' . $i . '),';
+            $valuesQuery .= '(' . $hostId . ',' . $i . '),';
 
             if ($insertCount === 50000) {
                 $query = rtrim($baseQuery . $valuesQuery, ',');

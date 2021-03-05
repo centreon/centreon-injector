@@ -14,10 +14,10 @@ command:
     max: 30 # maximum count of metrics per service
 
 host:
-  count: 200 # count of injected hosts
+  count: 20 # count of injected hosts
 
 service:
-  count: 10000 # count of injected services (randomly linked to a host)
+  count: 100 # count of injected services (randomly linked to a host)
 
 hostgroup:
   count: 50 # count of injected hostgroups
@@ -42,3 +42,9 @@ service_category:
   hosts:
     min: 0 # minimum count of services linked to a category
     max: 30 # maximum count of services linked to a category
+
+ba:
+  count: 10 # count of injected bas
+
+kpi:
+  count: 30 # count of injected kpis (randomly linked to existing bas)

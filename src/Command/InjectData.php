@@ -19,6 +19,8 @@ use App\Domain\HostgroupService;
 use App\Domain\ServicegroupService;
 use App\Domain\HostCategoryService;
 use App\Domain\ServiceCategoryService;
+use App\Domain\BaService;
+use App\Domain\KpiService;
 
 class InjectData extends Command
 {
@@ -34,8 +36,10 @@ class InjectData extends Command
     private $serviceService;
     private $hostgroupService;
     private $servicegroupService;
-    private $hostcategoryService;
-    private $servicecategoryService;
+    private $hostCategoryService;
+    private $serviceCategoryService;
+    private $baService;
+    private $kpiService;
 
     private $ids = [
         'timeperiod' => [],
@@ -47,6 +51,8 @@ class InjectData extends Command
         'servicegroup' => [],
         'hostcategory' => [],
         'servicecategory' => [],
+        'ba' => [],
+        'kpi' => [],
     ];
 
     /**
@@ -62,6 +68,8 @@ class InjectData extends Command
      * @param ServicegroupService $servicegroupService
      * @param HostCategoryService $hostCategoryService
      * @param ServiceCategoryService $serviceCategoryService
+     * @param BaService $baService
+     * @param KpiService $kpiService
      */
     public function __construct(
         ContainerService $containerService,
@@ -73,7 +81,9 @@ class InjectData extends Command
         HostgroupService $hostgroupService,
         ServicegroupService $servicegroupService,
         HostCategoryService $hostCategoryService,
-        ServiceCategoryService $serviceCategoryService
+        ServiceCategoryService $serviceCategoryService,
+        BaService $baService,
+        KpiService $kpiService
     ) {
         parent::__construct();
 
@@ -88,6 +98,8 @@ class InjectData extends Command
         $this->servicegroupService = $servicegroupService;
         $this->hostCategoryService = $hostCategoryService;
         $this->serviceCategoryService = $serviceCategoryService;
+        $this->baService = $baService;
+        $this->kpiService = $kpiService;
     }
 
     /**
@@ -110,7 +122,7 @@ class InjectData extends Command
                 'i',
                 InputOption::VALUE_OPTIONAL,
                 'Docker image to use',
-                'registry.centreon.com/mon-web-master:centos7'
+                'registry.centreon.com/des-bam-21.04:centos7'
             )
             ->addOption(
                 'container-id',
@@ -195,6 +207,9 @@ class InjectData extends Command
                 '============',
             ]);
 
+
+            $this->purge('kpi', $this->kpiService, $output);
+            $this->purge('ba', $this->baService, $output);
             $this->purge('service categorie', $this->serviceCategoryService, $output);
             $this->purge('host categorie', $this->hostCategoryService, $output);
             $this->purge('servicegroup', $this->servicegroupService, $output);
@@ -229,6 +244,18 @@ class InjectData extends Command
         $this->ids['service_category'] = $this->inject(
             'service categorie',
             $this->serviceCategoryService,
+            $configuration,
+            $output
+        );
+        $this->ids['ba'] = $this->inject(
+            'ba',
+            $this->baService,
+            $configuration,
+            $output
+        );
+        $this->ids['kpi'] = $this->inject(
+            'kpi',
+            $this->kpiService,
             $configuration,
             $output
         );
