@@ -16,6 +16,10 @@ class BaService implements InjectionServiceInterface
 
     public function inject(array $properties, array $injectedIds): array
     {
+        if (!$this->baRepository->isBamInstalled()) {
+            return [];
+        }
+
         $ba = new Ba(
             'ba_name',
             'ba_description'
@@ -27,6 +31,8 @@ class BaService implements InjectionServiceInterface
 
     public function purge()
     {
-        $this->baRepository->purge();
+        if ($this->baRepository->isBamInstalled()) {
+            $this->baRepository->purge();
+        }
     }
 }

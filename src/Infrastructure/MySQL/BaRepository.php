@@ -101,4 +101,15 @@ class BaRepository
     {
         $this->connection->query('TRUNCATE mod_bam');
     }
+
+    public function isBamInstalled(): bool
+    {
+        $result = $this->connection->query('SELECT id FROM modules_informations WHERE name = "centreon-bam-server"');
+
+        if ($result->fetch()) {
+            return true;
+        }
+
+        return false;
+    }
 }
