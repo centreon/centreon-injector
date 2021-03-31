@@ -2,22 +2,25 @@ poller:
   hostsOnCentral: true # dispatch hosts on central server ?
 
 timeperiod:
-  count: 100 # count of injected timeperiods
+  count: 10 # count of injected timeperiods
 
 contact:
-  count: 200 # count of injected timeperiods (non admin users)
+  count: 20 # count of injected timeperiods (non admin users)
 
 command:
-  count: 150 # count of injected commands
+  count: 10 # count of injected commands
   metrics:
     min: 1 # minimum count of metrics per service
     max: 30 # maximum count of metrics per service
 
 host:
-  count: 20 # count of injected hosts
+  count: 80 # count of injected hosts
 
 service:
-  count: 100 # count of injected services (randomly linked to a host)
+  count: 1000 # count of injected services (randomly linked to a host)
+
+metaservice:
+  count: 10 # count of injected metaservices
 
 hostgroup:
   count: 50 # count of injected hostgroups
@@ -47,4 +50,4 @@ ba:
   count: 10 # count of injected bas
 
 kpi:
-  count: 30 # count of injected kpis (randomly linked to existing bas)
+  count: 100 # count of injected kpis (randomly linked to existing bas)

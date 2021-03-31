@@ -15,6 +15,7 @@ use App\Domain\CommandService;
 use App\Domain\ContactService;
 use App\Domain\HostService;
 use App\Domain\ServiceService;
+use App\Domain\MetaserviceService;
 use App\Domain\HostgroupService;
 use App\Domain\ServicegroupService;
 use App\Domain\HostCategoryService;
@@ -34,6 +35,7 @@ class InjectData extends Command
     private $contactService;
     private $hostService;
     private $serviceService;
+    private $metaserviceService;
     private $hostgroupService;
     private $servicegroupService;
     private $hostCategoryService;
@@ -47,6 +49,7 @@ class InjectData extends Command
         'contact' => [],
         'host' => [],
         'service' => [],
+        'metaservice' => [],
         'hostgroup' => [],
         'servicegroup' => [],
         'hostcategory' => [],
@@ -64,6 +67,7 @@ class InjectData extends Command
      * @param ContactService $contactService
      * @param HostService $hostService
      * @param ServiceService $serviceService
+     * @param MetaserviceService $metaserviceService
      * @param HostgroupService $hostgroupService
      * @param ServicegroupService $servicegroupService
      * @param HostCategoryService $hostCategoryService
@@ -78,6 +82,7 @@ class InjectData extends Command
         ContactService $contactService,
         HostService $hostService,
         ServiceService $serviceService,
+        MetaserviceService $metaserviceService,
         HostgroupService $hostgroupService,
         ServicegroupService $servicegroupService,
         HostCategoryService $hostCategoryService,
@@ -94,6 +99,7 @@ class InjectData extends Command
         $this->contactService = $contactService;
         $this->hostService = $hostService;
         $this->serviceService = $serviceService;
+        $this->metaserviceService = $metaserviceService;
         $this->hostgroupService = $hostgroupService;
         $this->servicegroupService = $servicegroupService;
         $this->hostCategoryService = $hostCategoryService;
@@ -214,6 +220,7 @@ class InjectData extends Command
             $this->purge('host categorie', $this->hostCategoryService, $output);
             $this->purge('servicegroup', $this->servicegroupService, $output);
             $this->purge('hostgroup', $this->hostgroupService, $output);
+            $this->purge('metaservice', $this->serviceService, $output);
             $this->purge('service', $this->serviceService, $output);
             $this->purge('host', $this->hostService, $output);
             $this->purge('contact', $this->contactService, $output);
@@ -233,6 +240,7 @@ class InjectData extends Command
         $this->ids['contact'] = $this->inject('contact', $this->contactService, $configuration, $output);
         $this->ids['host'] = $this->inject('host', $this->hostService, $configuration, $output);
         $this->ids['service'] = $this->inject('service', $this->serviceService, $configuration, $output);
+        $this->ids['metaservice'] = $this->inject('metaservice', $this->metaserviceService, $configuration, $output);
         $this->ids['hostgroup'] = $this->inject('hostgroup', $this->hostgroupService, $configuration, $output);
         $this->ids['servicegroup'] = $this->inject('servicegroup', $this->servicegroupService, $configuration, $output);
         $this->ids['host_category'] = $this->inject(
