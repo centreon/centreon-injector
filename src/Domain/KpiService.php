@@ -16,6 +16,10 @@ class KpiService implements InjectionServiceInterface
 
     public function inject(array $properties, array $injectedIds): array
     {
+        if (!$this->baRepository->isBamInstalled()) {
+            return [];
+        }
+
         $kpi = new Kpi();
         $ids = $this->kpiRepository->inject($kpi, $properties, $injectedIds);
 
@@ -24,6 +28,8 @@ class KpiService implements InjectionServiceInterface
 
     public function purge()
     {
-        $this->kpiRepository->purge();
+        if ($this->baRepository->isBamInstalled()) {
+            $this->kpiRepository->purge();
+        }
     }
 }
