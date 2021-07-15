@@ -3,15 +3,18 @@
 namespace App\Domain;
 
 use App\Infrastructure\MySQL\KpiRepository;
+use App\Infrastructure\MySQL\BaRepository;
 use App\Domain\Kpi;
 
 class KpiService implements InjectionServiceInterface
 {
     private $kpiRepository;
+    private $baRepository;
 
-    public function __construct(KpiRepository $kpiRepository)
+    public function __construct(KpiRepository $kpiRepository, BaRepository $baRepository)
     {
         $this->kpiRepository = $kpiRepository;
+        $this->baRepository = $baRepository;
     }
 
     public function inject(array $properties, array $injectedIds): array
