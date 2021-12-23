@@ -16,17 +16,14 @@ class ContainerService
         $this->connection = $connection;
     }
 
-    public function run(string $image, ?string $containerId): Container
+    public function run(string $image, ?string $containerId, int $httpPort, string $label): Container
     {
         if ($containerId === null) {
             shell_exec('docker pull ' . $image);
-            $containerId = shell_exec('docker run -d -p 80 -p 3306 ' . $image);
+            $containerId = shell_exec('docker run -d -p ' . $httpPort . ':80 -p 3306:3306 --name ' . $label . ' ' . $image);
         }
 
         $containerId = str_replace(array('.', ' ', "\n", "\t", "\r"), '', $containerId);
-
-        $httpPort = shell_exec('docker port ' . $containerId . ' 80');
-        $httpPort = (int) explode(':', $httpPort)[1];
 
         $mysqlPort = shell_exec('docker port ' . $containerId . ' 3306');
         $mysqlPort = (int) explode(':', $mysqlPort)[1];
