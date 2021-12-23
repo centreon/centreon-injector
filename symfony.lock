@@ -209,6 +209,9 @@
     "symfony/polyfill-php80": {
         "version": "v1.22.0"
     },
+    "symfony/polyfill-php81": {
+        "version": "v1.23.0"
+    },
     "symfony/proxy-manager-bridge": {
         "version": "v5.2.1"
     },
@@ -234,6 +237,22 @@
     },
     "symfony/string": {
         "version": "v5.2.1"
+    },
+    "symfony/translation-contracts": {
+        "version": "v3.0.0"
+    },
+    "symfony/validator": {
+        "version": "6.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.3",
+            "ref": "3eb8df139ec05414489d55b97603c5f6ca0c44cb"
+        },
+        "files": [
+            "config/packages/test/validator.yaml",
+            "config/packages/validator.yaml"
+        ]
     },
     "symfony/var-dumper": {
         "version": "v5.2.1"

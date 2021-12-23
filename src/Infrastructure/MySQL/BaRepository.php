@@ -7,9 +7,6 @@ use App\Domain\Ba;
 
 class BaRepository
 {
-    /**
-     * @var Connection
-     */
     private $connection;
 
     private const PROPERTY_NAME = 'ba';
