@@ -20,7 +20,9 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
             - '../src/Tests/'
-            - '../src/Domain/Doctrine/'
+            #- '../src/Domain/Doctrine/'
+
+    App\Domain\Doctrine\DynamicConnection: '@doctrine.dbal.default_connection'
 
     App\Command\:
         resource: '../src/Command/'

@@ -191,9 +191,6 @@
     "symfony/http-kernel": {
         "version": "v5.2.1"
     },
-    "symfony/orm-pack": {
-        "version": "v2.1.0"
-    },
     "symfony/polyfill-intl-grapheme": {
         "version": "v1.22.0"
     },

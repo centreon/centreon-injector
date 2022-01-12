@@ -287,7 +287,7 @@ class InjectData extends Command
         $output->writeln([
             '',
             'Applying configuration',
-            '============',
+            '======================',
         ]);
         shell_exec('docker exec ' . $dockerLabel . ' /bin/sh -c "centreon -u admin -p centreon -a APPLYCFG -v 1"');
 

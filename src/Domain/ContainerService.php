@@ -2,7 +2,7 @@
 
 namespace App\Domain;
 
-use Doctrine\DBAL\Driver\Connection;
+use App\Domain\Doctrine\DynamicConnection as Connection;
 
 class ContainerService
 {
