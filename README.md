@@ -47,17 +47,18 @@ Edit file `data.yaml` to configure objects to inject
 
 Options:
       --docker                                 Start docker container instead of configured database connection
-  -i, --docker-image[=DOCKER-IMAGE]            Docker image to use [default: "registry.centreon.com/des-bam-master:centos7"]
+  -i, --docker-image[=DOCKER-IMAGE]            Docker image to use [default: "registry.centreon.com/mon-web-develop:centos7"]
       --container-id[=CONTAINER-ID]            Existing container id to use
   -c, --configurationFile[=CONFIGURATIONFILE]  Configuration file path [default: "data.yaml"]
   -p, --purge                                  Purge data
+      --docker-http-port[=DOCKER-HTTP-PORT]    Docker http port to use [default: "80"]
+      --docker-label[=DOCKER-LABEL]            Docker label to set [default: "injector"]
   -h, --help                                   Display help for the given command. When no command is given display help for the list command
   -q, --quiet                                  Do not output any message
   -V, --version                                Display this application version
-      --ansi                                   Force ANSI output
-      --no-ansi                                Disable ANSI output
+      --ansi|--no-ansi                         Force (or disable --no-ansi) ANSI output
   -n, --no-interaction                         Do not ask any interactive question
   -e, --env=ENV                                The Environment name. [default: "dev"]
-      --no-debug                               Switches off debug mode.
+      --no-debug                               Switch off debug mode.
   -v|vv|vvv, --verbose                         Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
 ```

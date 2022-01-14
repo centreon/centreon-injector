@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\MySQL;
 
-use Doctrine\DBAL\Driver\Connection;
+use App\Domain\Doctrine\DynamicConnection as Connection;
 
 class PollerRepository
 {

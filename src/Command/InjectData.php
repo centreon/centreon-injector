@@ -128,7 +128,7 @@ class InjectData extends Command
                 'i',
                 InputOption::VALUE_OPTIONAL,
                 'Docker image to use',
-                'registry.centreon.com/des-bam-21.04:centos7'
+                'registry.centreon.com/mon-web-develop:centos7'
             )
             ->addOption(
                 'container-id',
@@ -149,6 +149,20 @@ class InjectData extends Command
                 'p',
                 InputOption::VALUE_NONE,
                 'Purge data'
+            )
+            ->addOption(
+                'docker-http-port',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Docker http port to use',
+                '80'
+            )
+            ->addOption(
+                'docker-label',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Docker label to set',
+                'injector'
             );
     }
 
@@ -174,6 +188,8 @@ class InjectData extends Command
         $useDocker = $input->getOption('docker');
         $dockerImage = $input->getOption('docker-image');
         $containerId = $input->getOption('container-id');
+        $dockerHttpPort = $input->getOption('docker-http-port');
+        $dockerLabel = $input->getOption('docker-label');
 
         $configurationFile = $input->getOption('configurationFile');
         $filePath = realpath($configurationFile);
@@ -193,7 +209,7 @@ class InjectData extends Command
                 'Starting container',
                 '==================',
             ]);
-            $container = $this->containerService->run($dockerImage, $containerId);
+            $container = $this->containerService->run($dockerImage, $containerId, $dockerHttpPort, $dockerLabel);
             $output->writeln([
                 'Container Id : ' . $container->getId(),
                 'URL          : http://127.0.0.1:' . $container->getHttpPort() . '/centreon',
@@ -267,6 +283,13 @@ class InjectData extends Command
             $configuration,
             $output
         );
+
+        $output->writeln([
+            '',
+            'Applying configuration',
+            '======================',
+        ]);
+        shell_exec('docker exec ' . $dockerLabel . ' /bin/sh -c "centreon -u admin -p centreon -a APPLYCFG -v 1"');
 
         return Command::SUCCESS;
     }

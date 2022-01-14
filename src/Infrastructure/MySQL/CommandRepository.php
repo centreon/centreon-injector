@@ -2,14 +2,11 @@
 
 namespace App\Infrastructure\MySQL;
 
-use Doctrine\DBAL\Driver\Connection;
+use App\Domain\Doctrine\DynamicConnection as Connection;
 use App\Domain\Command;
 
 class CommandRepository
 {
-    /**
-     * @var Connection
-     */
     private $connection;
 
     private const PROPERTY_NAME = 'command';
