@@ -1,0 +1,9 @@
+FROM php:8.0.0-fpm-alpine
+RUN apk add --update-cache bash gcc make libc-dev autoconf gettext gettext-dev git icu-dev libzip-dev yaml yaml-dev docker
+
+RUN pecl install xdebug opcache yaml && docker-php-ext-enable xdebug opcache yaml
+RUN docker-php-ext-configure intl && docker-php-ext-install intl gettext zip
+
+RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/bin/composer && chmod +x /usr/bin/composer
+RUN sed -i 's/memory_limit = .*/memory_limit = '256M'/' /usr/local/etc/php/php.ini-development && sed -i 's/memory_limit = .*/memory_limit = '256M'/' /usr/local/etc/php/php.ini-production 
+WORKDIR /src
