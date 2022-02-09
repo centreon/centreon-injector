@@ -39,6 +39,11 @@ Edit file `data.yaml` to configure objects to inject
 ```shell
 ./bin/console centreon:inject-data
 ```
+### Use centreon injector with Docker
+
+```shell
+docker run -it -p xx:xx -v /var/run/docker.sock:/var/run/docker.sock -v centreon-injector:/src registry.centreon.com/injector:1.0 composer install && bin/console centreon:inject-data"
+```
 
 ### Available options
 
