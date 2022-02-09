@@ -30,9 +30,13 @@ class ContactRepository
         $maxId = $i + $count;
 
         $query = 'INSERT INTO contact ' .
-            '(contact_id, contact_name, contact_alias, contact_email, contact_passwd, ' .
+            '(contact_id, contact_name, contact_alias, contact_email, ' .
             'contact_oreon, reach_api, reach_api_rt, contact_admin, ' .
             'timeperiod_tp_id, timeperiod_tp_id2) ' .
+            'VALUES ';
+
+        $contactQuery = 'INSERT INTO contact_password ' .
+            '(id, password, contact_id, creation_date) ' .
             'VALUES ';
 
         $name = $contact->getName() . '_';
@@ -45,7 +49,6 @@ class ContactRepository
                 '"' . $name . $i . '",' .
                 '"' . $alias . $i . '",' .
                 '"' . $alias . $i . '@localhost",' .
-                '"' . $password . '",' .
                 '"1",' .
                 '1,' .
                 '1,' .
@@ -53,10 +56,19 @@ class ContactRepository
                 $injectedIds['timeperiod'][array_rand($injectedIds['timeperiod'], 1)] . ',' .
                 $injectedIds['timeperiod'][array_rand($injectedIds['timeperiod'], 1)] .
                 '),';
+
+            $contactQuery .= '('.
+                $i . ',' .
+                '"' . $password . '",' .
+                $i . ',' .
+                '1644417346' .
+                '),';
         }
         $query = rtrim($query, ',');
+        $contactQuery = rtrim($contactQuery, ',');
 
         $this->connection->query($query);
+        $this->connection->query($contactQuery);
 
         return $ids;
     }
