@@ -69,7 +69,7 @@ class HostDiscoJobRepository
                 $hostDiscoJob->getStatus() . ',' .
                 $hostDiscoJob->getDuration() . ',' .
                 'NULL,' .
-                $hostDiscoJob->getMonitoringServerId() .
+                $hostDiscoJob->getMonitoringServerId() . ',' .
                 '34' .
                 '),';
         }
