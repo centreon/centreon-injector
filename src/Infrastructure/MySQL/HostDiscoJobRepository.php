@@ -53,7 +53,7 @@ class HostDiscoJobRepository
 
         $baseQuery = 'INSERT INTO mod_host_disco_job ' .
             '(alias, provider_id, execution_mode, analysis_mode, save_mode, status, ' .
-            'duration, message, monitoring_server_id) ' .
+            'duration, message, monitoring_server_id, discovered_items) ' .
             'VALUES ';
         $valuesQuery = '';
 
@@ -70,6 +70,7 @@ class HostDiscoJobRepository
                 $hostDiscoJob->getDuration() . ',' .
                 'NULL,' .
                 $hostDiscoJob->getMonitoringServerId() .
+                '34' .
                 '),';
         }
 
