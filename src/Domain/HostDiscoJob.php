@@ -11,25 +11,25 @@ class HostDiscoJob
 
     public function __construct(
       string $alias,
-      int $provider_id,
-      int $execution_mode,
-      int $analysis_mode,
-      int $save_mode,
+      int $providerId,
+      int $executionMode,
+      int $analysisMode,
+      int $saveMode,
       int $status,
       int $duration,
       ?string $message,
-      int $monitoring_server_id
+      int $monitoringServerId
     )
     {
         $this->alias = $alias;
-        $this->provider_id = $provider_id;
-        $this->execution_mode = $execution_mode;
-        $this->analysis_mode = $analysis_mode;
-        $this->save_mode = $save_mode;
+        $this->providerId = $providerId;
+        $this->executionMode = $executionMode;
+        $this->analysisMode = $analysisMode;
+        $this->saveMode = $saveMode;
         $this->status = $status;
         $this->duration = $duration;
         $this->message = $message;
-        $this->monitoring_server_id = $monitoring_server_id;
+        $this->monitoringServerId = $monitoringServerId;
     }
 
     public function getId()
@@ -50,22 +50,22 @@ class HostDiscoJob
 
     public function getProviderId()
     {
-        return $this->provider_id;
+        return $this->providerId;
     }
 
     public function getExecutionMode()
     {
-        return $this->execution_mode;
+        return $this->executionMode;
     }
 
     public function getAnalysisMode()
     {
-        return $this->analysis_mode;
+        return $this->analysisMode;
     }
 
     public function getSaveMode()
     {
-        return $this->save_mode;
+        return $this->saveMode;
     }
 
     public function getStatus()
@@ -85,6 +85,6 @@ class HostDiscoJob
 
     public function getMonitoringServerId()
     {
-        return $this->monitoring_server_id;
+        return $this->monitoringServerId;
     }
 }
