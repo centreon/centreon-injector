@@ -51,3 +51,6 @@ ba:
 
 kpi:
   count: 100 # count of injected kpis (randomly linked to existing bas)
+
+host_disco_job:
+  count: 30 # count of injected host discovery jobs

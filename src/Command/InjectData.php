@@ -22,6 +22,7 @@ use App\Domain\HostCategoryService;
 use App\Domain\ServiceCategoryService;
 use App\Domain\BaService;
 use App\Domain\KpiService;
+use App\Domain\HostDiscoJobService;
 
 class InjectData extends Command
 {
@@ -42,6 +43,7 @@ class InjectData extends Command
     private $serviceCategoryService;
     private $baService;
     private $kpiService;
+    private $hostDiscoJobService;
 
     private $ids = [
         'timeperiod' => [],
@@ -56,6 +58,7 @@ class InjectData extends Command
         'servicecategory' => [],
         'ba' => [],
         'kpi' => [],
+        'hostdiscojob' => []
     ];
 
     /**
@@ -74,6 +77,7 @@ class InjectData extends Command
      * @param ServiceCategoryService $serviceCategoryService
      * @param BaService $baService
      * @param KpiService $kpiService
+     * @param HostDiscoJobService $hostDiscoJobService
      */
     public function __construct(
         ContainerService $containerService,
@@ -88,7 +92,8 @@ class InjectData extends Command
         HostCategoryService $hostCategoryService,
         ServiceCategoryService $serviceCategoryService,
         BaService $baService,
-        KpiService $kpiService
+        KpiService $kpiService,
+        HostDiscoJobService $hostDiscoJobService
     ) {
         parent::__construct();
 
@@ -106,6 +111,7 @@ class InjectData extends Command
         $this->serviceCategoryService = $serviceCategoryService;
         $this->baService = $baService;
         $this->kpiService = $kpiService;
+        $this->hostDiscoJobService = $hostDiscoJobService;
     }
 
     /**
@@ -242,6 +248,7 @@ class InjectData extends Command
             $this->purge('contact', $this->contactService, $output);
             $this->purge('timeperiod', $this->timeperiodService, $output);
             $this->purge('command', $this->commandService, $output);
+            $this->purge('hostdiscojob', $this->hostDiscoJobService, $output);
         }
 
 
@@ -280,6 +287,12 @@ class InjectData extends Command
         $this->ids['kpi'] = $this->inject(
             'kpi',
             $this->kpiService,
+            $configuration,
+            $output
+        );
+        $this->ids['hostdiscojob'] = $this->inject(
+            'hostdiscojob',
+            $this->hostDiscoJobService,
             $configuration,
             $output
         );
