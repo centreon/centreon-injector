@@ -169,6 +169,13 @@ class InjectData extends Command
                 InputOption::VALUE_OPTIONAL,
                 'Docker label to set',
                 'injector'
+            )
+            ->addOption(
+                'password',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Centreon password to use',
+                'Centreon!2021'
             );
     }
 
@@ -196,6 +203,7 @@ class InjectData extends Command
         $containerId = $input->getOption('container-id');
         $dockerHttpPort = $input->getOption('docker-http-port');
         $dockerLabel = $input->getOption('docker-label');
+        $password = $input->getOption('password');
 
         $configurationFile = $input->getOption('configurationFile');
         $filePath = realpath($configurationFile);
@@ -302,7 +310,13 @@ class InjectData extends Command
             'Applying configuration',
             '======================',
         ]);
-        shell_exec('docker exec ' . $dockerLabel . ' /bin/sh -c "centreon -u admin -p centreon -a APPLYCFG -v 1"');
+
+        $clapiExportCommand = 'centreon -u admin -p ' . $password . ' -a APPLYCFG -v 1';
+        if ($useDocker) {
+            shell_exec('docker exec ' . $dockerLabel . ' /bin/sh -c "' . $clapiExportCommand . '"');
+        } else {
+            shell_exec($clapiExportCommand);
+        }
 
         return Command::SUCCESS;
     }
