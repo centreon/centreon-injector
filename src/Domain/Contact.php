@@ -8,7 +8,7 @@ class Contact
 
     private $name;
     private $alias;
-    private $password = '2995cb0650c5f107230ed569a8c4d6e5'; // hash of "centreon"
+    private $password = '$2y$10$IWhlnT6vadelXk8ecbvkzeJ9Reka4VKnQTNa1POR2Tg7ji9uziJSu'; // hash of "centreon"
 
     public function __construct(string $name, string $alias)
     {
