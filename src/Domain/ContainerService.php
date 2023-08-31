@@ -28,9 +28,9 @@ class ContainerService
         $mysqlPort = shell_exec('docker port ' . $containerId . ' 3306');
         $mysqlPort = (int) explode(':', $mysqlPort)[1];
 
-        shell_exec('docker exec ' . $containerId . ' yum install git');
-        shell_exec('docker exec ' . $containerId . ' git clone https://github.com/centreon/centreon-plugins.git');
-        shell_exec('docker exec ' . $containerId . ' sh -c "cp -R centreon-plugins/* /usr/lib/centreon/plugins/"');
+        shell_exec('docker exec ' . $containerId . ' dnf install -y git');
+        shell_exec('docker exec ' . $containerId . ' git clone --depth=1 https://github.com/centreon/centreon-plugins.git');
+        shell_exec('docker exec ' . $containerId . ' sh -c "cp -R centreon-plugins/src/* /usr/lib/centreon/plugins/"');
         shell_exec('docker exec ' . $containerId . ' sh -c "chmod +x /usr/lib/centreon/plugins/centreon_plugins.pl"');
 
         $this->connection->changeDatabase('127.0.0.1', $mysqlPort, 'root', 'centreon', 'centreon');

@@ -14,10 +14,10 @@ command:
     max: 30 # maximum count of metrics per service
 
 host:
-  count: 80 # count of injected hosts
+  count: 10 # count of injected hosts
 
 service:
-  count: 1000 # count of injected services (randomly linked to a host)
+  count: 100 # count of injected services (randomly linked to a host)
 
 metaservice:
   count: 10 # count of injected metaservices
@@ -54,3 +54,17 @@ kpi:
 
 host_disco_job:
   count: 30 # count of injected host discovery jobs
+
+acl_resource:
+  count: 10
+  hosts: 100
+  servicegroups: 1000
+
+acl_group:
+  count: 10
+  resources: 3
+
+user:
+  administrators: 100
+  editors: 100
+  users: 100
