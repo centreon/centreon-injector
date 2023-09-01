@@ -17,6 +17,16 @@ class KpiService implements InjectionServiceInterface
         $this->baRepository = $baRepository;
     }
 
+    public static function getDefaultPriority(): int
+    {
+        return InjectionPriority::Kpi->value;
+    }
+
+    public function getName(): string
+    {
+        return 'kpi';
+    }
+
     public function inject(array $properties, array $injectedIds): array
     {
         if (!$this->baRepository->isBamInstalled()) {

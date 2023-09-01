@@ -14,6 +14,16 @@ class ServiceService implements InjectionServiceInterface
         $this->serviceRepository = $serviceRepository;
     }
 
+    public static function getDefaultPriority(): int
+    {
+        return InjectionPriority::Service->value;
+    }
+
+    public function getName(): string
+    {
+        return 'service';
+    }
+
     public function inject(array $properties, array $injectedIds): array
     {
         $service = new Service('service_name', 'service_description');

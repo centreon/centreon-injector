@@ -14,6 +14,16 @@ class ServicegroupService implements InjectionServiceInterface
         $this->servicegroupRepository = $servicegroupRepository;
     }
 
+    public static function getDefaultPriority(): int
+    {
+        return InjectionPriority::Servicegroup->value;
+    }
+
+    public function getName(): string
+    {
+        return 'servicegroup';
+    }
+
     public function inject(array $properties, array $injectedIds): array
     {
         $servicegroup = new Servicegroup('servicegroup_name', 'servicegroup_alias');

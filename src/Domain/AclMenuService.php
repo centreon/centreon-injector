@@ -10,6 +10,16 @@ class AclMenuService implements InjectionServiceInterface
     {
     }
 
+    public static function getDefaultPriority(): int
+    {
+        return InjectionPriority::AclMenu->value;
+    }
+
+    public function getName(): string
+    {
+        return 'acl_menu';
+    }
+
     public function inject(array $properties, array $injectedIds): array
     {
         $ids = $this->aclMenuRepository->inject($properties, $injectedIds);

@@ -4,6 +4,7 @@ namespace App\Infrastructure\MySQL;
 
 use App\Domain\Doctrine\DynamicConnection as Connection;
 use App\Domain\AclGroup;
+use App\Domain\AclResource;
 
 class AclGroupRepository
 {
@@ -68,7 +69,7 @@ class AclGroupRepository
 
         $insertCount = 0;
         for ($i = $firstId; $i < $maxId; $i++) {
-            foreach (array_slice($injectedIds['aclresource'], 0, $properties[self::PROPERTY_NAME]['resources']) as $resourceId) {
+            foreach (array_slice($injectedIds['acl_resource'], 0, $properties[self::PROPERTY_NAME]['resources']) as $resourceId) {
                 $insertCount++;
                 $valuesQuery .= '(' . $i . ',' . $resourceId . '),';
 

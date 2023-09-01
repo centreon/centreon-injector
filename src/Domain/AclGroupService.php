@@ -11,6 +11,16 @@ class AclGroupService implements InjectionServiceInterface
     {
     }
 
+    public static function getDefaultPriority(): int
+    {
+        return InjectionPriority::AclGroup->value;
+    }
+
+    public function getName(): string
+    {
+        return 'acl_group';
+    }
+
     public function inject(array $properties, array $injectedIds): array
     {
         $aclGroup = new AclGroup('acl_group_name');

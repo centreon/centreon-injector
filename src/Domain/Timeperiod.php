@@ -6,9 +6,6 @@ class Timeperiod
 {
     private $id;
 
-    private $name;
-    private $alias;
-
     private $mondayRange = '00:00-24:00';
     private $tuesdayRange = '00:00-24:00';
     private $wednesdayRange = '00:00-24:00';
@@ -17,10 +14,9 @@ class Timeperiod
     private $saturdayRange = '00:00-24:00';
     private $sundayRange = '00:00-24:00';
 
-    public function __construct(string $name, string $alias)
+    public function __construct(private string $name, private string $alias)
     {
-        $this->name = $name;
-        $this->alias = $alias;
+
     }
 
     public function getId()
@@ -34,12 +30,12 @@ class Timeperiod
         return $this;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function getAlias()
+    public function getAlias(): string
     {
         return $this->alias;
     }

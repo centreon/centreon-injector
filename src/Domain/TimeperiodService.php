@@ -14,6 +14,16 @@ class TimeperiodService implements InjectionServiceInterface
         $this->timeperiodRepository = $timeperiodRepository;
     }
 
+    public static function getDefaultPriority(): int
+    {
+        return InjectionPriority::Timeperiod->value;
+    }
+
+    public function getName(): string
+    {
+        return 'timeperiod';
+    }
+
     public function inject(array $properties, array $injectedIds): array
     {
         $timeperiod = new Timeperiod('tp_name', 'tp_alias');

@@ -14,6 +14,16 @@ class MetaserviceService implements InjectionServiceInterface
         $this->metaserviceRepository = $metaserviceRepository;
     }
 
+    public static function getDefaultPriority(): int
+    {
+        return InjectionPriority::Metaservice->value;
+    }
+
+    public function getName(): string
+    {
+        return 'metaservice';
+    }
+
     public function inject(array $properties, array $injectedIds): array
     {
         $metaservice = new Metaservice('metaservice_name');

@@ -94,7 +94,7 @@ class UserRepository
 
         $insertCount = 0;
         for ($i = $firstId; $i < $maxId; $i++) {
-            foreach (array_slice($injectedIds['aclgroup'], random_int(0, count($injectedIds['aclgroup'])), 1) as $aclGroupId) {
+            foreach (array_slice($injectedIds['acl_group'], random_int(0, count($injectedIds['acl_group'])), 1) as $aclGroupId) {
                 $insertCount++;
                 $valuesQuery .= '(' . $i . ',' . $aclGroupId . '),';
 

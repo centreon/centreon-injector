@@ -11,6 +11,16 @@ class AclResourceService implements InjectionServiceInterface
     {
     }
 
+    public static function getDefaultPriority(): int
+    {
+        return InjectionPriority::AclResource->value;
+    }
+
+    public function getName(): string
+    {
+        return 'acl_resource';
+    }
+
     public function inject(array $properties, array $injectedIds): array
     {
         $aclResource = new AclResource('acl_resource_name');

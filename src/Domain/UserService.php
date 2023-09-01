@@ -12,6 +12,16 @@ class UserService implements InjectionServiceInterface
     {
     }
 
+    public static function getDefaultPriority(): int
+    {
+        return InjectionPriority::User->value;
+    }
+
+    public function getName(): string
+    {
+        return 'user';
+    }
+
     public function inject(array $properties, array $injectedIds): array
     {
         $ids = [];
