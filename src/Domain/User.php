@@ -6,7 +6,7 @@ use App\Domain\UserRole;
 
 class User
 {
-    private ?int $id;
+    private ?int $id = null;
 
     public function __construct(private string $name, private UserRole $userRole)
     {

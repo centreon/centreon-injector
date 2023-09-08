@@ -4,7 +4,7 @@ namespace App\Domain;
 
 class AclGroup
 {
-    private ?int $id;
+    private ?int $id = null;
 
     public function __construct(private string $name)
     {
