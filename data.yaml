@@ -14,10 +14,10 @@ command:
     max: 30 # maximum count of metrics per service
 
 host:
-  count: 10 # count of injected hosts
+  count: 80 # count of injected hosts
 
 service:
-  count: 100 # count of injected services (randomly linked to a host)
+  count: 1000 # count of injected services (randomly linked to a host)
 
 metaservice:
   count: 10 # count of injected metaservices
