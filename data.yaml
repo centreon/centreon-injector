@@ -54,3 +54,17 @@ kpi:
 
 host_disco_job:
   count: 30 # count of injected host discovery jobs
+
+acl_resource:
+  count: 10
+  hosts: 100
+  servicegroups: 1000
+
+acl_group:
+  count: 10
+  resources: 3
+
+user:
+  administrators: 100
+  editors: 100
+  users: 100

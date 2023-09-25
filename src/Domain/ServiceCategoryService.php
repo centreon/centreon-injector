@@ -14,6 +14,16 @@ class ServiceCategoryService implements InjectionServiceInterface
         $this->serviceCategoryRepository = $serviceCategoryRepository;
     }
 
+    public static function getDefaultPriority(): int
+    {
+        return InjectionPriority::ServiceCategory->value;
+    }
+
+    public function getName(): string
+    {
+        return 'service_category';
+    }
+
     public function inject(array $properties, array $injectedIds): array
     {
         $serviceCategory = new ServiceCategory('service_category_name', 'service_category_alias');

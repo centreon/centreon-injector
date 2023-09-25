@@ -14,6 +14,16 @@ class HostCategoryService implements InjectionServiceInterface
         $this->hostCategoryRepository = $hostCategoryRepository;
     }
 
+    public static function getDefaultPriority(): int
+    {
+        return InjectionPriority::HostCategory->value;
+    }
+
+    public function getName(): string
+    {
+        return 'host_category';
+    }
+
     public function inject(array $properties, array $injectedIds): array
     {
         $hostCategory = new HostCategory('host_category_name', 'host_category_alias');

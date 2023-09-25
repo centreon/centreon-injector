@@ -14,6 +14,16 @@ class HostgroupService implements InjectionServiceInterface
         $this->hostgroupRepository = $hostgroupRepository;
     }
 
+    public static function getDefaultPriority(): int
+    {
+        return InjectionPriority::Hostgroup->value;
+    }
+
+    public function getName(): string
+    {
+        return 'hostgroup';
+    }
+
     public function inject(array $properties, array $injectedIds): array
     {
         $hostgroup = new Hostgroup('hostgroup_name', 'hostgroup_alias');

@@ -17,6 +17,16 @@ class HostService implements InjectionServiceInterface
         $this->pollerRepository = $pollerRepository;
     }
 
+    public static function getDefaultPriority(): int
+    {
+        return InjectionPriority::Host->value;
+    }
+
+    public function getName(): string
+    {
+        return 'host';
+    }
+
     public function inject(array $properties, array $injectedIds): array
     {
         $injectedIds['poller'] = $this->pollerRepository->getPollerIds($properties);

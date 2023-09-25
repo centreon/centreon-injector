@@ -14,6 +14,16 @@ class BaService implements InjectionServiceInterface
         $this->baRepository = $baRepository;
     }
 
+    public static function getDefaultPriority(): int
+    {
+        return InjectionPriority::Ba->value;
+    }
+
+    public function getName(): string
+    {
+        return 'ba';
+    }
+
     public function inject(array $properties, array $injectedIds): array
     {
         if (!$this->baRepository->isBamInstalled()) {

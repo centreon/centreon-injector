@@ -2,15 +2,16 @@
 
 namespace App\Domain;
 
-class Contact
+class AclGroup
 {
-    private $id;
+    private ?int $id = null;
 
-    public function __construct(private string $name, private string $alias)
+    public function __construct(private string $name)
     {
+        $this->name = $name;
     }
 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -24,10 +25,5 @@ class Contact
     public function getName(): string
     {
         return $this->name;
-    }
-
-    public function getAlias(): string
-    {
-        return $this->alias;
     }
 }

@@ -14,6 +14,16 @@ class ContactService implements InjectionServiceInterface
         $this->contactRepository = $contactRepository;
     }
 
+    public static function getDefaultPriority(): int
+    {
+        return InjectionPriority::Contact->value;
+    }
+
+    public function getName(): string
+    {
+        return 'contact';
+    }
+
     public function inject(array $properties, array $injectedIds): array
     {
         $contact = new Contact('contact_name', 'contact_alias');

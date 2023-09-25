@@ -14,6 +14,16 @@ class CommandService implements InjectionServiceInterface
         $this->commandRepository = $commandRepository;
     }
 
+    public static function getDefaultPriority(): int
+    {
+        return InjectionPriority::Command->value;
+    }
+
+    public function getName(): string
+    {
+        return 'command';
+    }
+
     public function inject(array $properties, array $injectedIds): array
     {
         $command = new Command(

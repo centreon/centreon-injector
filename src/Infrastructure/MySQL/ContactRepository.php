@@ -25,8 +25,8 @@ class ContactRepository
 
         $count = $properties[self::PROPERTY_NAME]['count'];
 
-        $result = $this->connection->query('SELECT MAX(contact_id) AS max FROM contact');
-        $i = ((int) $result->fetch()['max']) + 1;
+        $result = $this->connection->executeQuery('SELECT MAX(contact_id) AS max FROM contact');
+        $i = ((int) $result->fetchAssociative()['max']) + 1;
         $maxId = $i + $count;
 
         $query = 'INSERT INTO contact ' .
@@ -35,46 +35,36 @@ class ContactRepository
             'timeperiod_tp_id, timeperiod_tp_id2) ' .
             'VALUES ';
 
-        $contactQuery = 'INSERT INTO contact_password ' .
-            '(id, password, contact_id, creation_date) ' .
-            'VALUES ';
-
         $name = $contact->getName() . '_';
         $alias = $contact->getAlias() . '_';
-        $password = $contact->getPassword();
+
+        $contactIndex = 0;
         for ($i; $i < $maxId; $i++) {
+            $contactIndex++;
+
             $ids[] = $i;
             $query .= '(' .
                 $i . ',' .
-                '"' . $name . $i . '",' .
-                '"' . $alias . $i . '",' .
-                '"' . $alias . $i . '@localhost",' .
-                '"1",' .
-                '1,' .
-                '1,' .
-                '"1",' .
+                '"' . $name . $contactIndex . '",' .
+                '"' . $alias . $contactIndex . '",' .
+                '"' . $alias . $contactIndex . '@localhost",' .
+                '"0",' .
+                '0,' .
+                '0,' .
+                '"0",' .
                 $injectedIds['timeperiod'][array_rand($injectedIds['timeperiod'], 1)] . ',' .
                 $injectedIds['timeperiod'][array_rand($injectedIds['timeperiod'], 1)] .
                 '),';
-
-            $contactQuery .= '('.
-                $i . ',' .
-                '"' . $password . '",' .
-                $i . ',' .
-                '1644417346' .
-                '),';
         }
         $query = rtrim($query, ',');
-        $contactQuery = rtrim($contactQuery, ',');
 
-        $this->connection->query($query);
-        $this->connection->query($contactQuery);
+        $this->connection->executeQuery($query);
 
         return $ids;
     }
 
     public function purge()
     {
-        $this->connection->query('TRUNCATE contact');
+        $this->connection->executeQuery('TRUNCATE contact');
     }
 }

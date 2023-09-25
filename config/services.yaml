@@ -28,5 +28,13 @@ services:
         resource: '../src/Command/'
         tags: ['console.command']
 
+    _instanceof:
+        App\Domain\InjectionServiceInterface:
+             tags: ['resource.providers']
+
+    App\Command\InjectData:
+        arguments:
+            - !tagged_iterator resource.providers
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

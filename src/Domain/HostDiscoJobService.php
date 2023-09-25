@@ -14,6 +14,16 @@ class HostDiscoJobService implements InjectionServiceInterface
         $this->hostDiscoJobRepository = $hostDiscoJobRepository;
     }
 
+    public static function getDefaultPriority(): int
+    {
+        return InjectionPriority::HostDiscoJob->value;
+    }
+
+    public function getName(): string
+    {
+        return 'host_disco_job';
+    }
+
     public function inject(array $properties, array $injectedIds): array
     {
         if (!$this->hostDiscoJobRepository->isHostDiscoInstalled()) {

@@ -2,116 +2,30 @@
 
 namespace App\Command;
 
-use App\Domain\ContainerService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Yaml\Yaml;
 
+use App\Domain\ContainerService;
 use App\Domain\InjectionServiceInterface;
-use App\Domain\TimeperiodService;
-use App\Domain\CommandService;
-use App\Domain\ContactService;
-use App\Domain\HostService;
-use App\Domain\ServiceService;
-use App\Domain\MetaserviceService;
-use App\Domain\HostgroupService;
-use App\Domain\ServicegroupService;
-use App\Domain\HostCategoryService;
-use App\Domain\ServiceCategoryService;
-use App\Domain\BaService;
-use App\Domain\KpiService;
-use App\Domain\HostDiscoJobService;
 
 class InjectData extends Command
 {
+    private array $resourceInjectors;
+
     // the name of the command (the part after "bin/console")
     protected static $defaultName = 'centreon:inject-data';
 
-    private $containerService;
+    private $ids = [];
 
-    private $timeperiodService;
-    private $commandService;
-    private $contactService;
-    private $hostService;
-    private $serviceService;
-    private $metaserviceService;
-    private $hostgroupService;
-    private $servicegroupService;
-    private $hostCategoryService;
-    private $serviceCategoryService;
-    private $baService;
-    private $kpiService;
-    private $hostDiscoJobService;
-
-    private $ids = [
-        'timeperiod' => [],
-        'command' => [],
-        'contact' => [],
-        'host' => [],
-        'service' => [],
-        'metaservice' => [],
-        'hostgroup' => [],
-        'servicegroup' => [],
-        'hostcategory' => [],
-        'servicecategory' => [],
-        'ba' => [],
-        'kpi' => [],
-        'hostdiscojob' => []
-    ];
-
-    /**
-     * Constructor
-     *
-     * @param ContainerService $containerService
-     * @param TimeperiodService $timeperiodService
-     * @param CommandService $commandService
-     * @param ContactService $contactService
-     * @param HostService $hostService
-     * @param ServiceService $serviceService
-     * @param MetaserviceService $metaserviceService
-     * @param HostgroupService $hostgroupService
-     * @param ServicegroupService $servicegroupService
-     * @param HostCategoryService $hostCategoryService
-     * @param ServiceCategoryService $serviceCategoryService
-     * @param BaService $baService
-     * @param KpiService $kpiService
-     * @param HostDiscoJobService $hostDiscoJobService
-     */
     public function __construct(
-        ContainerService $containerService,
-        TimeperiodService $timeperiodService,
-        CommandService $commandService,
-        ContactService $contactService,
-        HostService $hostService,
-        ServiceService $serviceService,
-        MetaserviceService $metaserviceService,
-        HostgroupService $hostgroupService,
-        ServicegroupService $servicegroupService,
-        HostCategoryService $hostCategoryService,
-        ServiceCategoryService $serviceCategoryService,
-        BaService $baService,
-        KpiService $kpiService,
-        HostDiscoJobService $hostDiscoJobService
+        \Traversable $resourceInjectors,
+        private ContainerService $containerService,
     ) {
+        $this->resourceInjectors = iterator_to_array($resourceInjectors);
         parent::__construct();
-
-        $this->containerService = $containerService;
-
-        $this->timeperiodService = $timeperiodService;
-        $this->commandService = $commandService;
-        $this->contactService = $contactService;
-        $this->hostService = $hostService;
-        $this->serviceService = $serviceService;
-        $this->metaserviceService = $metaserviceService;
-        $this->hostgroupService = $hostgroupService;
-        $this->servicegroupService = $servicegroupService;
-        $this->hostCategoryService = $hostCategoryService;
-        $this->serviceCategoryService = $serviceCategoryService;
-        $this->baService = $baService;
-        $this->kpiService = $kpiService;
-        $this->hostDiscoJobService = $hostDiscoJobService;
     }
 
     /**
@@ -134,7 +48,7 @@ class InjectData extends Command
                 'i',
                 InputOption::VALUE_OPTIONAL,
                 'Docker image to use',
-                'registry.centreon.com/mon-web-develop:centos7'
+                'docker.centreon.com/centreon/centreon-web-alma9:develop'
             )
             ->addOption(
                 'container-id',
@@ -196,7 +110,7 @@ class InjectData extends Command
     /**
      * @inheritDoc
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $useDocker = $input->getOption('docker');
         $dockerImage = $input->getOption('docker-image');
@@ -243,20 +157,9 @@ class InjectData extends Command
                 '============',
             ]);
 
-
-            $this->purge('kpi', $this->kpiService, $output);
-            $this->purge('ba', $this->baService, $output);
-            $this->purge('service categorie', $this->serviceCategoryService, $output);
-            $this->purge('host categorie', $this->hostCategoryService, $output);
-            $this->purge('servicegroup', $this->servicegroupService, $output);
-            $this->purge('hostgroup', $this->hostgroupService, $output);
-            $this->purge('metaservice', $this->serviceService, $output);
-            $this->purge('service', $this->serviceService, $output);
-            $this->purge('host', $this->hostService, $output);
-            $this->purge('contact', $this->contactService, $output);
-            $this->purge('timeperiod', $this->timeperiodService, $output);
-            $this->purge('command', $this->commandService, $output);
-            $this->purge('hostdiscojob', $this->hostDiscoJobService, $output);
+            foreach (array_reverse($this->resourceInjectors) as $resourceInjector) {
+                $this->purge($resourceInjector, $output);
+            }
         }
 
 
@@ -266,44 +169,9 @@ class InjectData extends Command
             '==============',
         ]);
 
-        $this->ids['timeperiod'] = $this->inject('timeperiod', $this->timeperiodService, $configuration, $output);
-        $this->ids['command'] = $this->inject('command', $this->commandService, $configuration, $output);
-        $this->ids['contact'] = $this->inject('contact', $this->contactService, $configuration, $output);
-        $this->ids['host'] = $this->inject('host', $this->hostService, $configuration, $output);
-        $this->ids['service'] = $this->inject('service', $this->serviceService, $configuration, $output);
-        $this->ids['metaservice'] = $this->inject('metaservice', $this->metaserviceService, $configuration, $output);
-        $this->ids['hostgroup'] = $this->inject('hostgroup', $this->hostgroupService, $configuration, $output);
-        $this->ids['servicegroup'] = $this->inject('servicegroup', $this->servicegroupService, $configuration, $output);
-        $this->ids['host_category'] = $this->inject(
-            'host categorie',
-            $this->hostCategoryService,
-            $configuration,
-            $output
-        );
-        $this->ids['service_category'] = $this->inject(
-            'service categorie',
-            $this->serviceCategoryService,
-            $configuration,
-            $output
-        );
-        $this->ids['ba'] = $this->inject(
-            'ba',
-            $this->baService,
-            $configuration,
-            $output
-        );
-        $this->ids['kpi'] = $this->inject(
-            'kpi',
-            $this->kpiService,
-            $configuration,
-            $output
-        );
-        $this->ids['hostdiscojob'] = $this->inject(
-            'hostdiscojob',
-            $this->hostDiscoJobService,
-            $configuration,
-            $output
-        );
+        foreach ($this->resourceInjectors as $resourceInjector) {
+            $this->ids[$resourceInjector->getName()] = $this->inject($resourceInjector, $configuration, $output);
+        }
 
         $output->writeln([
             '',
@@ -324,17 +192,15 @@ class InjectData extends Command
     /**
      * Purge data
      *
-     * @param string $name
      * @param InjectionServiceInterface $injectionService
      * @param OutputInterface $output
      * @return void
      */
     private function purge(
-        string $name,
         InjectionServiceInterface $injectionService,
         OutputInterface $output
     ) {
-        $output->write('Purging ' . $name . 's ... ');
+        $output->write('Purging ' . $injectionService->getName() . 's ... ');
         $injectionService->purge();
         $output->writeln('<fg=green>OK</>');
     }
@@ -342,19 +208,17 @@ class InjectData extends Command
     /**
      * Inject data
      *
-     * @param string $name
      * @param InjectionServiceInterface $injectionService
      * @param array $configuration
      * @param OutputInterface $output
      * @return array
      */
     private function inject(
-        string $name,
         InjectionServiceInterface $injectionService,
         array $configuration,
         OutputInterface $output
     ): array {
-        $output->write('Injecting ' . $name . 's ... ');
+        $output->write('Injecting ' . $injectionService->getName() . 's ... ');
         $injectedObjects = $injectionService->inject($configuration, $this->ids);
         $output->writeln('<fg=green>OK</>');
 
