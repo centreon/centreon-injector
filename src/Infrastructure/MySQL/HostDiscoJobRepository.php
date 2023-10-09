@@ -22,6 +22,10 @@ class HostDiscoJobRepository
 
         $count = $properties[self::PROPERTY_NAME]['count'];
 
+        if ($count === 0) {
+            return $ids;
+        }
+
         $pluginPackResult = $this->connection->executeQuery('SELECT MAX(pluginpack_id) AS max FROM mod_ppm_pluginpack');
         $firstPluginPackId = ((int) $pluginPackResult->fetchAssociative()['max']) + 1;
 
