@@ -1,0 +1,171 @@
+{
+  "asio_version": "1.28.0",
+  "endpoint central-broker-master-input": {
+    "central-broker-master-input-1": {
+      "bbdo_input_ack_limit": 1000.0,
+      "bbdo_unacknowledged_events": 2.0,
+      "event_processing_speed": 0.0,
+      "last_connection_attempt": 1700464691.0,
+      "last_connection_success": 1700464691.0,
+      "last_event_at": 1700464688.0,
+      "queue_file_enabled": false,
+      "queued_events": 0,
+      "read_filters": "all",
+      "state": "connected",
+      "unacknowledged_events": 0,
+      "write_filters": ""
+    },
+    "event_processing_speed": 0.0,
+    "last_connection_attempt": -1.0,
+    "last_connection_success": -1.0,
+    "last_event_at": 1700464688.0,
+    "memory_file_path": "/var/lib/centreon-broker//central-broker-master.memory.central-broker-master-input",
+    "name": "central-broker-master-input",
+    "one_peer_retention_mode": false,
+    "peers": "0: ",
+    "queue_file_path": "/var/lib/centreon-broker//central-broker-master.queue.central-broker-master-input",
+    "queued_events": 0,
+    "read_filters": "all",
+    "state": "listening",
+    "write_filters": ""
+  },
+  "endpoint central-broker-master-unified-sql": {
+    "count": 9,
+    "cv events": 0,
+    "cvs events": 0,
+    "event_processing_speed": 1.5,
+    "failover": null,
+    "last_connection_attempt": 1700464688.0,
+    "last_connection_success": 1700464689.0,
+    "last_event_at": 1700468373.0,
+    "logs events": 0,
+    "loop timeout": 30,
+    "max pending events": 2000,
+    "max perfdata events": 2000,
+    "memory_file_path": "/var/lib/centreon-broker//central-broker-master.memory.central-broker-master-unified-sql",
+    "metrics events": 0,
+    "name": "central-broker-master-unified-sql",
+    "pending_events": 0,
+    "perfdata events": 16,
+    "processed_events": 0,
+    "queue_file_enabled": false,
+    "queue_file_path": "/var/lib/centreon-broker//central-broker-master.queue.central-broker-master-unified-sql",
+    "queued_events": 0,
+    "read_filters": "all",
+    "state": "connected",
+    "status": "reading event from multiplexing engine",
+    "unacknowledged_events": 0,
+    "write_filters": "acknowledgement, comment, custom_variable, custom_variable_status, downtime, host_check, host_dependency, host_group, host_group_member, host, host_parent, host_status, instance, instance_status, log_entry, service_check, service_dependency, service_group, service_group_member, service, service_status, instance_configuration, responsive_instance, Service, AdaptiveService, ServiceStatus, Host, AdaptiveHost, HostStatus, Severity, Tag, Comment, Downtime, CustomVariables, CustomVariablesStatus, Check, Check, LogEntry, InstanceStatus, Instance, Acknowledgement, ResponsiveInstance, rebuild_metrics, remove_graphs, remove_graphs, Bench"
+  },
+  "endpoint centreon-bam-monitoring": {
+    "event_processing_speed": 0.38235294117647056,
+    "failover": null,
+    "last_connection_attempt": 1700464688.0,
+    "last_connection_success": 1700464689.0,
+    "last_event_at": 1700468371.0,
+    "memory_file_path": "/var/lib/centreon-broker//central-broker-master.memory.centreon-bam-monitoring",
+    "name": "centreon-bam-monitoring",
+    "queue_file_enabled": false,
+    "queue_file_path": "/var/lib/centreon-broker//central-broker-master.queue.centreon-bam-monitoring",
+    "queued_events": 0,
+    "read_filters": "all",
+    "state": "connected",
+    "status": "reading event from multiplexing engine",
+    "unacknowledged_events": 0,
+    "write_filters": "acknowledgement, downtime, service, service_status, Service, ServiceStatus, Downtime, Acknowledgement, ba_status, kpi_status, inherited_downtime, InheritedDowntime, BaStatus, KpiStatus"
+  },
+  "endpoint centreon-bam-reporting": {
+    "event_processing_speed": 0.010231556273559504,
+    "failover": null,
+    "last_connection_attempt": 1700464688.0,
+    "last_connection_success": 1700464689.0,
+    "last_event_at": 1700464691.0,
+    "memory_file_path": "/var/lib/centreon-broker//central-broker-master.memory.centreon-bam-reporting",
+    "name": "centreon-bam-reporting",
+    "queue_file_enabled": false,
+    "queue_file_path": "/var/lib/centreon-broker//central-broker-master.queue.centreon-bam-reporting",
+    "queued_events": 1,
+    "read_filters": "all",
+    "state": "connected",
+    "status": "reading event from multiplexing engine",
+    "unacknowledged_events": 1,
+    "write_filters": "kpi_event, ba_duration_event, dimension_ba_event, dimension_kpi_event, dimension_ba_bv_relation_event, dimension_bv_event, dimension_truncate_table_signal, rebuild, dimension_timeperiod, dimension_ba_timeperiod_relation, BaEvent, KpiEvent, DimensionBvEvent, DimensionBvEvent, DimensionTimePeriod, DimensionBaEvent, DimensionKpiEvent, BaDurationEvent, DimensionBaTimeperiodRelation, DimensionTruncateTableSignal"
+  },
+  "endpoint centreon-broker-master-rrd": {
+    "centreon-broker-master-rrd-2": {
+      "bbdo_input_ack_limit": 1000.0,
+      "bbdo_unacknowledged_events": 0.0,
+      "event_processing_speed": 0.0,
+      "last_connection_attempt": 1700468295.0,
+      "last_connection_success": 1700468295.0,
+      "last_event_at": 1700468295.0,
+      "queue_file_enabled": false,
+      "queued_events": 0,
+      "read_filters": "all",
+      "state": "connected",
+      "unacknowledged_events": 0,
+      "write_filters": "all"
+    },
+    "event_processing_speed": 0.0,
+    "last_connection_attempt": -1.0,
+    "last_connection_success": -1.0,
+    "last_event_at": 1700464688.0,
+    "memory_file_path": "/var/lib/centreon-broker//central-broker-master.memory.centreon-broker-master-rrd",
+    "name": "centreon-broker-master-rrd",
+    "one_peer_retention_mode": true,
+    "peers": "0: ",
+    "queue_file_path": "/var/lib/centreon-broker//central-broker-master.queue.centreon-broker-master-rrd",
+    "queued_events": 0,
+    "read_filters": "all",
+    "state": "listening",
+    "write_filters": "all"
+  },
+  "module/usr/share/centreon/lib/centreon-broker/10-neb.so": {
+    "name": "/usr/share/centreon/lib/centreon-broker/10-neb.so",
+    "size": "8809624B",
+    "state": "loaded"
+  },
+  "module/usr/share/centreon/lib/centreon-broker/15-stats.so": {
+    "name": "/usr/share/centreon/lib/centreon-broker/15-stats.so",
+    "size": "4126480B",
+    "state": "loaded"
+  },
+  "module/usr/share/centreon/lib/centreon-broker/20-bam.so": {
+    "name": "/usr/share/centreon/lib/centreon-broker/20-bam.so",
+    "size": "24329592B",
+    "state": "loaded"
+  },
+  "module/usr/share/centreon/lib/centreon-broker/20-unified_sql.so": {
+    "name": "/usr/share/centreon/lib/centreon-broker/20-unified_sql.so",
+    "size": "59759624B",
+    "state": "loaded"
+  },
+  "module/usr/share/centreon/lib/centreon-broker/50-tcp.so": {
+    "name": "/usr/share/centreon/lib/centreon-broker/50-tcp.so",
+    "size": "8268856B",
+    "state": "loaded"
+  },
+  "module/usr/share/centreon/lib/centreon-broker/60-tls.so": {
+    "name": "/usr/share/centreon/lib/centreon-broker/60-tls.so",
+    "size": "3591136B",
+    "state": "loaded"
+  },
+  "module/usr/share/centreon/lib/centreon-broker/70-lua.so": {
+    "name": "/usr/share/centreon/lib/centreon-broker/70-lua.so",
+    "size": "11825168B",
+    "state": "loaded"
+  },
+  "mysql manager": {
+    "delay since last check": "0",
+    "waiting tasks in connection 0": "0",
+    "waiting tasks in connection 1": "0",
+    "waiting tasks in connection 2": "0"
+  },
+  "now": "1700468375",
+  "pid": 1280,
+  "thread_pool": {
+    "latency": "",
+    "size": 4
+  },
+  "version": "23.10.0"
+}

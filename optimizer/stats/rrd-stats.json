@@ -1,0 +1,74 @@
+{
+  "asio_version": "1.28.0",
+  "endpoint central-rrd-master-input": {
+    "bbdo_input_ack_limit": 1000.0,
+    "bbdo_unacknowledged_events": 18.0,
+    "event_processing_speed": 5.133333333333334,
+    "failover": null,
+    "last_connection_attempt": 1700468295.0,
+    "last_connection_success": 1700468295.0,
+    "last_event_at": 1700469972.0,
+    "memory_file_path": "/var/lib/centreon-broker//central-rrd-master.memory.central-rrd-master-input",
+    "name": "central-rrd-master-input",
+    "queue_file_enabled": false,
+    "queue_file_path": "/var/lib/centreon-broker//central-rrd-master.queue.central-rrd-master-input",
+    "queued_events": 0,
+    "read_filters": "all",
+    "state": "connected",
+    "status": "reading event from multiplexing engine",
+    "unacknowledged_events": 0,
+    "write_filters": ""
+  },
+  "endpoint central-rrd-master-output": {
+    "event_processing_speed": 3.533333333333333,
+    "failover": null,
+    "last_connection_attempt": 1700464688.0,
+    "last_connection_success": 1700464688.0,
+    "last_event_at": 1700469972.0,
+    "memory_file_path": "/var/lib/centreon-broker//central-rrd-master.memory.central-rrd-master-output",
+    "name": "central-rrd-master-output",
+    "queue_file_enabled": false,
+    "queue_file_path": "/var/lib/centreon-broker//central-rrd-master.queue.central-rrd-master-output",
+    "queued_events": 0,
+    "read_filters": "all",
+    "state": "connected",
+    "status": "reading event from multiplexing engine",
+    "unacknowledged_events": 0,
+    "write_filters": "metric, remove_graph, status, rebuild_message, remove_graphs_message, pb_metric, pb_status, Bench"
+  },
+  "module/usr/share/centreon/lib/centreon-broker/10-neb.so": {
+    "name": "/usr/share/centreon/lib/centreon-broker/10-neb.so",
+    "size": "8809624B",
+    "state": "loaded"
+  },
+  "module/usr/share/centreon/lib/centreon-broker/15-stats.so": {
+    "name": "/usr/share/centreon/lib/centreon-broker/15-stats.so",
+    "size": "4126480B",
+    "state": "loaded"
+  },
+  "module/usr/share/centreon/lib/centreon-broker/50-tcp.so": {
+    "name": "/usr/share/centreon/lib/centreon-broker/50-tcp.so",
+    "size": "8268856B",
+    "state": "loaded"
+  },
+  "module/usr/share/centreon/lib/centreon-broker/60-tls.so": {
+    "name": "/usr/share/centreon/lib/centreon-broker/60-tls.so",
+    "size": "3591136B",
+    "state": "loaded"
+  },
+  "module/usr/share/centreon/lib/centreon-broker/70-rrd.so": {
+    "name": "/usr/share/centreon/lib/centreon-broker/70-rrd.so",
+    "size": "8330264B",
+    "state": "loaded"
+  },
+  "mysql manager": {
+    "delay since last check": "0"
+  },
+  "now": "1700469972",
+  "pid": 1281,
+  "thread_pool": {
+    "latency": "",
+    "size": 4
+  },
+  "version": "23.10.0"
+}
