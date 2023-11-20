@@ -191,13 +191,15 @@ class Simplex:
                 self.smart = True
                 return None
             m = (self.data[t[1]] + self.data[t[2]]) // 2
-            avg = (self.data[t[1]].services_count + self.data[t[2]].services_count) // 2
+            avg = (self.data[t[1]].services_count +
+                   self.data[t[2]].services_count) // 2
             compute_best_services_count(m, min_value, max_value)
             if abs(avg - m.services_count) > 0:
                 t = lengths[0]
                 m = (self.data[t[1]] + self.data[t[2]]) // 2
                 m = add_point_if_needed(points, m)
-                avg = (self.data[t[1]].services_count + self.data[t[2]].services_count) // 2
+                avg = (self.data[t[1]].services_count +
+                       self.data[t[2]].services_count) // 2
                 compute_best_services_count(m, min_value, max_value)
                 new_s = copy.copy(self)
                 new_s[t[1]] = m
@@ -226,12 +228,14 @@ main_idx = 0
 
 points = []
 
+
 def add_point_if_needed(points, v):
     for p in points:
         if v == p:
             return p
     points.append(v)
     return v
+
 
 def extract_services(data):
     """
@@ -454,9 +458,12 @@ user:
     with open("new_config.yaml", "w") as f:
         f.write(output)
 
+
 def call_injector():
-    subprocess.run([f"{INJECTOR_PATH}/bin/console", "centreon:inject-data", "-p"])
-    subprocess.run([f"{INJECTOR_PATH}/bin/console", "centreon:inject-data", "-c", "new_config.yaml"])
+    subprocess.run([f"{INJECTOR_PATH}/bin/console",
+                   "centreon:inject-data", "-p"])
+    subprocess.run([f"{INJECTOR_PATH}/bin/console",
+                   "centreon:inject-data", "-c", "new_config.yaml"])
 
 
 def start_centreon():
@@ -469,7 +476,7 @@ def stop_centreon():
 
 def _check_centreon():
     with open("engine-stats.json") as f:
-        #with open("/var/lib/centreon-engine/central-module-master-stats.json", "r") as f:
+        # with open("/var/lib/centreon-engine/central-module-master-stats.json", "r") as f:
         content = json.load(f)
         # Has Engine some queue files?
         for key in content:
@@ -479,14 +486,15 @@ def _check_centreon():
                     qf = content[key]["queue_file"]
                     if key not in HIST[0]:
                         HIST[0][key] = []
-                    HIST[0][key].append(int(qf["file_expected_terminated_at"]) - int(time.time()))
+                    HIST[0][key].append(
+                        int(qf["file_expected_terminated_at"]) - int(time.time()))
                     HIST[0][key] = HIST[0][key][-20:]
                     if HIST[0][key][-1] < HIST[0][key][0]:
                         retval &= True
                     retval &= False
 
     with open("broker-stats.json") as f:
-        #with open("/var/lib/centreon-broker/central-broker-master-stats.json", "r") as f:
+        # with open("/var/lib/centreon-broker/central-broker-master-stats.json", "r") as f:
         content = json.load(f)
         # Has Broker Central some queue files?
         for key in content:
@@ -496,7 +504,8 @@ def _check_centreon():
                     qf = content[key]["queue_file"]
                     if key not in HIST[1]:
                         HIST[1][key] = []
-                    HIST[1][key].append(int(qf["file_expected_terminated_at"]) - int(time.time()))
+                    HIST[1][key].append(
+                        int(qf["file_expected_terminated_at"]) - int(time.time()))
                     HIST[1][key] = HIST[1][key][-20:]
                     if HIST[1][key][-1] < HIST[1][key][0]:
                         retval &= True
@@ -504,7 +513,7 @@ def _check_centreon():
 
     with open("rrd-stats.json") as f:
         retval = True
-        #with open("/var/lib/centreon-broker/central-rrd-master-stats.json", "r") as f:
+        # with open("/var/lib/centreon-broker/central-rrd-master-stats.json", "r") as f:
         content = json.load(f)
         # Has Broker Central some queue files?
         for key in content:
@@ -514,7 +523,8 @@ def _check_centreon():
                     qf = content[key]["queue_file"]
                     if key not in HIST[2]:
                         HIST[2][key] = []
-                    HIST[2][key].append(int(qf["file_expected_terminated_at"]) - int(time.time()))
+                    HIST[2][key].append(
+                        int(qf["file_expected_terminated_at"]) - int(time.time()))
                     HIST[2][key] = HIST[2][key][-20:]
                     if HIST[2][key][-1] < HIST[2][key][0]:
                         retval &= True
@@ -544,7 +554,7 @@ def check_centreon():
     return ok
 
 
-#def check_centreon(v: Vertex):
+# def check_centreon(v: Vertex):
 #    sum = np.sum(v.v) ** 2 + v.services_count ** 2
 #    return sum < 50000
 
@@ -578,7 +588,7 @@ def compute_best_services_count(v, min_services_count, max_services_count):
         call_injector()
         start_centreon()
         ok = check_centreon()
-        #ok = check_centreon(v)
+        # ok = check_centreon(v)
         if ok:
             min_services_count = current_services_count
         else:
@@ -590,12 +600,12 @@ def compute_best_services_count(v, min_services_count, max_services_count):
         v.set_services_count(min_services_count)
 
 
-## Main program
+# Main program
 if __name__ == "__main__":
 
     # We start to read the configuration to store it into data that is a list
     # of object of the form { "name": str, "value": int }
-    with open(f"{INJECTOR_PATH}/config.yaml", "r") as f:
+    with open(f"{INJECTOR_PATH}/data.yaml", "r") as f:
         config = load(f, Loader=Loader)
         idx = 0
         for k, v in config.items():
