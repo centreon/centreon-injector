@@ -1,0 +1,14 @@
+**/.github/             @centreon/owners-pipelines
+
+*.ts                    @centreon/owners-react
+*.tsx                   @centreon/owners-react
+*.js                    @centreon/owners-react
+*.jsx                   @centreon/owners-react
+package.json            @centreon/owners-react
+package-lock.json       @centreon/owners-react
+
+*.php                   @centreon/owners-php
+*.xml                   @centreon/owners-php
+**/composer.*           @centreon/owners-php
+
+*.feature               @centreon/owners-gherkin
