@@ -1,5 +1,3 @@
-**/.github/             @centreon/owners-pipelines
-
 *.ts                    @centreon/owners-react
 *.tsx                   @centreon/owners-react
 *.js                    @centreon/owners-react
@@ -12,3 +10,5 @@ package-lock.json       @centreon/owners-react
 **/composer.*           @centreon/owners-php
 
 *.feature               @centreon/owners-gherkin
+
+.github/**              @centreon/owners-pipelines
