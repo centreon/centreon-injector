@@ -37,7 +37,7 @@ class UserRepository
         $maxId = $firstId + $count;
 
         $baseQuery = 'INSERT INTO contact ' .
-            '(contact_id, contact_name, contact_alias, contact_email, contact_lang, contact_activate, contact_admin, contact_oreon) ' .
+            '(contact_id, contact_name, contact_alias, contact_email, contact_lang, contact_activate, contact_admin, contact_oreon, reach_api, reach_api_rt) ' .
             'VALUES ';
         $valuesQuery = '';
 
@@ -60,7 +60,9 @@ class UserRepository
                 '"en_US.UTF-8",' .
                 '"1",' .
                 '"' . $isAdmin . '",' .
-                '"1"' .
+                '"1",' .
+                '1,' .
+                '1' .
                 '),';
             if ($insertCount === 50000) {
                 $query = rtrim($baseQuery . $valuesQuery, ',');
