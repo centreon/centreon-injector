@@ -60,8 +60,8 @@ class UserRepository
                 '"en_US.UTF-8",' .
                 '"1",' .
                 '"' . $isAdmin . '",' .
-                '"1"' .
-                '"1"' .
+                '"1",' .
+                '"1",' .
                 '"1"' .
                 '),';
             if ($insertCount === 50000) {
