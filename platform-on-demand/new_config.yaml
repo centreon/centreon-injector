@@ -1,0 +1,70 @@
+poller:
+  hostsOnCentral: true # dispatch hosts on central server
+
+timeperiod:
+  count: 10
+
+contact:
+  count: 20
+
+command:
+  count: 10
+  metrics:
+    min: 1
+    max: 30
+
+host:
+  count: 1
+
+service:
+  count: 500
+
+metaservice:
+  count: 10
+
+hostgroup:
+  count: 50
+  hosts:
+    min: 0
+    max: 200
+
+servicegroup:
+  count: 60
+  services:
+    min: 0
+    max: 300
+
+host_category:
+  count: 20
+  hosts:
+    min: 0
+    max: 10
+
+service_category:
+  count: 30
+  hosts:
+    min: 0
+    max: 30
+
+ba:
+  count: 10
+
+kpi:
+  count: 100
+
+host_disco_job:
+  count: 0
+
+acl_resource:
+  count: 10
+  hosts: 100
+  servicegroups: 1000
+
+acl_group:
+  count: 10
+  resources: 3
+
+user:
+  administrators: 100
+  editors: 100
+  users: 1
