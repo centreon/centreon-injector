@@ -12,7 +12,7 @@ Inject centreon objects directly in database
 > :warning: **If you are not using docker**, you need to clone centreon-plugins repository on your virtual machine :
 > ```
 > git clone https://github.com/centreon/centreon-plugins.git
-> cp -R centreon-plugins/* /usr/lib/centreon/plugins/
+> cp -R centreon-plugins/src/* /usr/lib/centreon/plugins/
 > chmod +x /usr/lib/centreon/plugins/centreon_plugins.pl
 > ```
 
