@@ -23,7 +23,7 @@ centreon-plugins repository on your virtual machine :
 
 Install PHP dependencies :
 
-```
+```bash
 composer install
 ```
 
