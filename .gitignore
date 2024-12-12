@@ -4,6 +4,9 @@
 ## IntelliJ / PHPStorm
 .idea
 
+## centreon-injector
+data.override.yaml
+
 # Cache and logs (Symfony2)
 /app/cache/*
 /app/logs/*
