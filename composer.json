@@ -43,6 +43,9 @@
         "symfony/polyfill-iconv": "*",
         "symfony/polyfill-php72": "*"
     },
+    "bin": [
+        "bin/console"
+    ],
     "scripts": {
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
