@@ -1,51 +1,72 @@
 # centreon-injector
+
 Inject centreon objects directly in database
 
 ## Prerequisites
 
 * git
-* php 7.2
+* php >=8.0
 * php-yaml module
 * composer
 * docker (optional)
 
-> :warning: **If you are not using docker**, you need to clone centreon-plugins repository on your virtual machine :
+> :warning: **If you are not using docker**, you need to clone
+centreon-plugins repository on your virtual machine :
 > ```
 > git clone https://github.com/centreon/centreon-plugins.git
 > cp -R centreon-plugins/src/* /usr/lib/centreon/plugins/
 > chmod +x /usr/lib/centreon/plugins/centreon_plugins.pl
 > ```
+> Note that this step is not necessary to inject data in database.
 
 ## Dependencies installation
 
 Install PHP dependencies :
-```
+
+```bash
 composer install
 ```
 
 ## Configuration
 
-Edit file `data.yaml` to configure objects to inject
+If you want to change the data in the following file `data.yaml`, you
+need to create a new file named `data.override.yml` with the same structure
+with data changed and pass it as an argument.
 
-> :warning: **If you are not using docker**, you need to configure connection in `.env` file :
-> ```
-> DATABASE_URL="mysql://<user>:<password>@<ip_address>:<port>/<database_name>?serverVersion=5.7"
-> ```
+If you are not using docker and you want to change the DATABASE_URL, you
+can create a `.env.local` file with the following content for example :
+
+```dotenv
+DATABASE_URL=mysql://<user>:<password>@<ip_address>:<port>/<database_name>
+```
+
+This file will be charged automatically by the command.
 
 ## Usage
 
 ### Basic usage
 
+Without custom configuration :
+
 ```shell
 ./bin/console centreon:inject-data
 ```
+
+Custom configuration with a `data.override.yml` file to custom data :
+
+```shell
+./bin/console centreon:inject-data -c data.override.yml
+```
+
 ### Use centreon injector with Docker
 
 ```shell
 docker run -it -p xx:xx -v /var/run/docker.sock:/var/run/docker.sock -v centreon-injector:/src docker.centreon.com/centreon/injector:1.0 composer install && bin/console centreon:inject-data"
 ```
 
-### Available options
+You can custom your command with a `.env.local` file and a `data.override.yml` file as explained above.
+
+### Available arguments to pass to the command
 
 ```shell
 ./bin/console centreon:inject-data [options]
