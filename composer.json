@@ -1,5 +1,5 @@
 {
-    "name": "kduret/centreon-injector",
+    "name": "centreon/centreon-injector",
     "type": "project",
     "license": "GPL-2.0-only",
     "description": "Centreon Injector",
