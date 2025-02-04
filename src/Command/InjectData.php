@@ -179,11 +179,11 @@ class InjectData extends Command
             '======================',
         ]);
 
-        $clapiExportCommand = 'centreon -u admin -p ' . $password . ' -a APPLYCFG -v 1';
         if ($useDocker) {
+            $clapiExportCommand = 'centreon -u admin -p ' . $password . ' -a APPLYCFG -v 1';
             shell_exec('docker exec ' . $dockerLabel . ' /bin/sh -c "' . $clapiExportCommand . '"');
         } else {
-            shell_exec($clapiExportCommand);
+            system(__DIR__ . "/../../script/clapi_APPLYCFG.sh");
         }
 
         return Command::SUCCESS;
