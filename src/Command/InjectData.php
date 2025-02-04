@@ -180,9 +180,12 @@ class InjectData extends Command
         ]);
 
         if ($useDocker) {
+            // Only available using docker container
             $clapiExportCommand = 'centreon -u admin -p ' . $password . ' -a APPLYCFG -v 1';
             shell_exec('docker exec ' . $dockerLabel . ' /bin/sh -c "' . $clapiExportCommand . '"');
         } else {
+            // Only available for manual utilisation of centreon injector (with centreon-dev-environment for example)
+            // system() is used to get a response from the console in real time
             $bashScriptPath = __DIR__ . "/../../script/clapi_APPLYCFG.sh";
             system("chmod +x {$bashScriptPath}");
             system($bashScriptPath);
