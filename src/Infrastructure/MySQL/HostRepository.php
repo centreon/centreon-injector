@@ -29,6 +29,13 @@ class HostRepository
         $firstId = ((int) $result->fetch()['max']) + 1;
         $maxId = $firstId + $count;
 
+        // to complete extended_host_information table (required to have data of host)
+        $extendedInformationHostBaseQuery = 'INSERT INTO extended_host_information ' .
+            '(host_host_id) ' .
+            'VALUES ';
+        $extendedInformationHostValuesQuery = '';
+
+        // to complete host table
         $baseQuery = 'INSERT INTO host ' .
             '(host_id, host_name, host_alias, host_address, host_register, command_command_id) ' .
             'VALUES ';
@@ -49,9 +56,12 @@ class HostRepository
                 '"1",' .
                 $injectedIds['command'][0] .
                 '),';
+            $extendedInformationHostValuesQuery .= '(' . $i . '),';
             if ($insertCount === 50000) {
                 $query = rtrim($baseQuery . $valuesQuery, ',');
                 $this->connection->query($query);
+                $extendedQuery = rtrim($extendedInformationHostBaseQuery . $extendedInformationHostValuesQuery, ',');
+                $this->connection->query($extendedQuery);
                 $insertCount = 0;
                 $valuesQuery = '';
             }
@@ -60,6 +70,8 @@ class HostRepository
         if ($insertCount > 0) {
             $query = rtrim($baseQuery . $valuesQuery, ',');
             $this->connection->query($query);
+            $extendedQuery = rtrim($extendedInformationHostBaseQuery . $extendedInformationHostValuesQuery, ',');
+            $this->connection->query($extendedQuery);
         }
 
         $baseQuery = 'INSERT INTO ns_host_relation ' .
