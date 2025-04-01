@@ -12,3 +12,6 @@ package-lock.json       @centreon/owners-react
 *.feature               @centreon/owners-gherkin
 
 .github/**              @centreon/owners-pipelines
+
+.gitleaks.toml          @centreon/owners-security
+.gitleaksignore         @centreon/owners-security
