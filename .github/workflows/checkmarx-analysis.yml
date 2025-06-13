@@ -18,7 +18,6 @@ jobs:
   pipeline-scan:
     name: Run a pipeline scan
     runs-on: ubuntu-24.04
-    outputs:
 
     steps:
       - name: routing
