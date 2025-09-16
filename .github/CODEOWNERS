@@ -15,4 +15,4 @@ package-lock.json           @centreon/owners-react
 
 .gitleaks.toml              @centreon/owners-security
 .gitleaksignore             @centreon/owners-security
-**/checkmarx-analysis.yml   @centreon/owners-security
+**/security-checks.yml      @centreon/owners-security
