@@ -92,7 +92,7 @@ user:
 
 ### ETL execution
 
-Before launch mbi injector, you need to execute this command line
+Before launch mbi injector, you need to execute this command line on MBI server:
 
 ```
 /usr/share/centreon-bi//bin/centreonBIETL -rIiD
