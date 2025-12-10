@@ -9,6 +9,7 @@ import zoneinfo
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
+from itertools import product
 from typing import Any, Dict, List, Optional, Set, Tuple
 
 import mysql.connector
@@ -105,6 +106,27 @@ TABLES_CONFIG = [
         ],
     ),
     TableConfig(
+        "mod_bi_hgmonthavailability",
+        priority_date_cols=["time_id"],
+        unique_key_strategy=[
+            "modbihg_id",
+            "modbihc_id",
+            "time_id",
+            "liveservice_id",
+        ],
+    ),
+    TableConfig(
+        "mod_bi_hgservicemonthavailability",
+        priority_date_cols=["time_id"],
+        unique_key_strategy=[
+            "modbihg_id",
+            "modbihc_id",
+            "modbisc_id",
+            "time_id",
+            "liveservice_id",
+        ],
+    ),
+    TableConfig(
         "mod_bi_metricdailyvalue",
         priority_date_cols=["time_id"],
         unique_key_strategy=[
@@ -122,17 +144,16 @@ TABLES_CONFIG = [
         ],
     ),
     TableConfig(
-        "mod_bi_hgmonthavailability",
+        "mod_bi_metricmonthcapacity",
         priority_date_cols=["time_id"],
         unique_key_strategy=[
-            "modbihg_id",
-            "modbihc_id",
-            "time_id",
+            "servicemetric_id",
             "liveservice_id",
+            "time_id",
         ],
     ),
     TableConfig(
-        "mod_bi_metricentiledailyvalue",
+        "mod_bi_metriccentiledailyvalue",
         priority_date_cols=["time_id"],
         unique_key_strategy=[
             "servicemetric_id",
@@ -141,7 +162,7 @@ TABLES_CONFIG = [
         ],
     ),
     TableConfig(
-        "mod_bi_metricentileweeklyvalue",
+        "mod_bi_metriccentileweeklyvalue",
         priority_date_cols=["time_id"],
         unique_key_strategy=[
             "servicemetric_id",
@@ -150,7 +171,7 @@ TABLES_CONFIG = [
         ],
     ),
     TableConfig(
-        "mod_bi_metricentilemonthlyvalue",
+        "mod_bi_metriccentilemonthlyvalue",
         priority_date_cols=["time_id"],
         unique_key_strategy=[
             "servicemetric_id",
@@ -196,6 +217,7 @@ class Config:
         self.use_fake_data = args.fake_data
         self.db_central = args.db_central
         self.metric_name = args.metric_name
+        self.liveservice_name = args.liveservice_name
         self.truncate = args.truncate
 
         self.pool_config = {
@@ -461,9 +483,7 @@ class TableAnalyzer:
                     f"[{table}] Partition '{partition_name}' created for value < {next_upper}"
                 )
             except mysql.connector.Error as e:
-                logger.error(
-                    f"[{table}] Failed to create partition for value {target_value}: {e}"
-                )
+                logger.info(f"[{table}] {e}")
                 return
 
     def ensure_partitions_for_range(self, table: str, min_value, max_value):
@@ -868,6 +888,31 @@ class DataProcessor:
 
         return ids
 
+    def _fetch_liveservice_id(self, liveservice_name: str) -> Optional[int]:
+        """
+        Fetch id from mod_bi_liveservice
+        filtered by a specific liveservice_name.
+        """
+
+        query = """
+            SELECT id
+            FROM mod_bi_liveservice
+            WHERE name = %s
+            LIMIT 1
+        """
+
+        try:
+            with self.conn_mgr.get_connection() as conn:
+                cursor = conn.cursor(dictionary=True)
+                cursor.execute(query, (liveservice_name,))
+                row = cursor.fetchone()
+                return row["id"] if row else None
+        except Exception as e:
+            logger.error(
+                f"Failed to fetch id for liveservice '{liveservice_name}': {e}"
+            )
+            return None
+
     def _fetch_ba_ids(self) -> List[int]:
         """
         Fetch all ba_id from mod_bam_reporting_ba.
@@ -937,6 +982,75 @@ class DataProcessor:
 
         return ids
 
+    def _fetch_hostgroups_ids(self) -> List[int]:
+        """
+        Fetch all modbiservice_id from mod_bi_service.
+        """
+        ids = []
+
+        query = """
+            SELECT id
+            FROM mod_bi_hostgroups
+            WHERE id IS NOT NULL
+        """
+
+        try:
+            with self.conn_mgr.get_connection() as conn:
+                cursor = conn.cursor(dictionary=True)
+                cursor.execute(query)
+                rows = cursor.fetchall()
+                ids = [row["id"] for row in rows]
+        except Exception as e:
+            logger.error(f"Failed to fetch modbiservice_ids from mod_bi_services: {e}")
+
+        return ids
+
+    def _fetch_hostcategories_ids(self) -> List[int]:
+        """
+        Fetch all modbiservice_id from mod_bi_service.
+        """
+        ids = []
+
+        query = """
+            SELECT id
+            FROM mod_bi_hostcategories
+            WHERE id IS NOT NULL
+        """
+
+        try:
+            with self.conn_mgr.get_connection() as conn:
+                cursor = conn.cursor(dictionary=True)
+                cursor.execute(query)
+                rows = cursor.fetchall()
+                ids = [row["id"] for row in rows]
+        except Exception as e:
+            logger.error(f"Failed to fetch modbiservice_ids from mod_bi_services: {e}")
+
+        return ids
+
+    def _fetch_servicecategories_ids(self) -> List[int]:
+        """
+        Fetch all modbiservice_id from mod_bi_service.
+        """
+        ids = []
+
+        query = """
+            SELECT id
+            FROM mod_bi_servicecategories
+            WHERE id IS NOT NULL
+        """
+
+        try:
+            with self.conn_mgr.get_connection() as conn:
+                cursor = conn.cursor(dictionary=True)
+                cursor.execute(query)
+                rows = cursor.fetchall()
+                ids = [row["id"] for row in rows]
+        except Exception as e:
+            logger.error(f"Failed to fetch modbiservice_ids from mod_bi_services: {e}")
+
+        return ids
+
     def _generate_metric_values(self) -> Dict[str, float]:
         """Generate consistent metric values."""
         min_val = round(random.uniform(0.01, 10), 6)
@@ -953,57 +1067,107 @@ class DataProcessor:
             "last_value": last_val,
         }
 
-    def _create_monthly_row(self, table: str, time_id: int, ids: int) -> Dict:
+    def _generate_centile_values(self) -> Dict[str, float]:
+        """Generate consistent centile values."""
+        min_val = round(random.uniform(0.01, 10), 6)
+        max_val = round(random.uniform(50, 150), 6)
+        centile_value = round(random.uniform(min_val, max_val), 6)
+        centile_param = 99.0000
+        centile_id = 1
+
+        return {
+            "centile_value": centile_value,
+            "centile_param": centile_param,
+            "centile_id": centile_id,
+        }
+
+    def _create_monthly_row(
+        self,
+        table: str,
+        time_id: int,
+        hg_id: int,
+        hc_id: int,
+        sc_id: int,
+        ids: int,
+        liveservice_id: int,
+    ) -> Dict:
         """Create a monthly row based on table type."""
-        if "hgmonthavailability" in table.lower():
+        if "hgmonthavailability" in table:
             return {
-                "modbihost_id": ids,
+                "modbihg_id": hg_id,
+                "modbihc_id": hc_id,
                 "time_id": time_id,
-                "liveservice_id": 1,
+                "liveservice_id": liveservice_id,
+                "mtrs": 2,
+                "mtbsi": 4,
+                "mtbf": 2,
                 "available": 60000,
-                "unavailable": 0,
-                "unreachable": 0,
+                "unavailable_time": 0,
+                "actual_unavailable_total": 0,
                 "alert_unavailable_opened": 0,
                 "alert_unavailable_closed": 0,
                 "alert_unreachable_opened": 0,
                 "alert_unreachable_closed": 0,
+                "alert_unreachable_duration": 0,
             }
-        elif "hgservicemonthavailability" in table.lower():
+        elif "hgservicemonthavailability" in table:
             return {
-                "modbiservice_id": ids,
+                "modbihg_id": hg_id,
+                "modbihc_id": hc_id,
+                "modbisc_id": sc_id,
                 "time_id": time_id,
-                "liveservice_id": 1,
-                "available": random.randint(30000, 60000),
-                "unavailable": random.randint(0, 100),
-                "degraded": random.randint(0, 50),
-                "alert_unavailable_opened": random.randint(0, 2),
-                "alert_unavailable_closed": random.randint(0, 2),
-                "alert_unreachable_opened": random.randint(0, 2),
-                "alert_unreachable_closed": random.randint(0, 2),
+                "liveservice_id": liveservice_id,
+                "mtrs": 2,
+                "mtbsi": 4,
+                "mtbf": 2,
+                "available": 60000,
+                "unavailable_time": 0,
+                "degraded_time": 0,
+                "desr_unavailable_total": 0,
+                "alert_unavailable_opened": 0,
+                "alert_unavailable_closed": 0,
+                "alert_degraded_total": 0,
+                "alert_degraded_opened": 0,
+                "alert_degraded_closed": 0,
+                "alert_other_total": 0,
+                "alert_other_opened": 0,
+                "alert_other_closed": 0,
             }
-        elif "metric" in table.lower() and "centile" not in table.lower():
+        elif "metric" in table and "centile" not in table:
             metric_values = self._generate_metric_values()
             return {
                 "servicemetric_id": ids,
                 "time_id": time_id,
-                "liveservice_id": 1,
+                "liveservice_id": liveservice_id,
                 **metric_values,
                 "total": round(random.uniform(90, 150), 6),
                 "warning_treshold": 200.0,
                 "critical_treshold": 400.0,
             }
+        elif "metriccentilemonthlyvalue" in table.lower():
+            centile_values = self._generate_centile_values()
+            data = {
+                "servicemetric_id": ids,
+                "time_id": time_id,
+                "liveservice_id": liveservice_id,
+                **centile_values,
+                "total": round(random.uniform(90, 150), 6),
+                "warning_treshold": 200.0,
+                "critical_treshold": 400.0,
+            }
+            return data
 
         return None
 
     def _create_daily_row(
-        self, table: str, time_id: int, ids: int, resource: str
+        self, table: str, time_id: int, ids: int, resource: str, liveservice_id: int
     ) -> Dict:
         """Create a daily row based on table type."""
         if "hostavailability" in table.lower():
             return {
                 f"modbi{resource}_id": ids,
                 "time_id": time_id,
-                "liveservice_id": 1,
+                "liveservice_id": liveservice_id,
                 "available": random.randint(30000, 60000),
                 "unavailable": random.randint(
                     10000, 50000
@@ -1020,7 +1184,7 @@ class DataProcessor:
             return {
                 f"modbi{resource}_id": ids,
                 "time_id": time_id,
-                "liveservice_id": 1,
+                "liveservice_id": liveservice_id,
                 "available": random.randint(30000, 60000),
                 "unavailable": random.randint(10000, 50000),
                 "degraded": random.randint(0, 50),
@@ -1032,7 +1196,7 @@ class DataProcessor:
         elif "stateevents" in table.lower():
             return {
                 f"modbi{resource}_id": ids,
-                "modbiliveservice_id": 1,
+                "modbiliveservice_id": liveservice_id,
                 "state": random.randint(0, 3),
                 "start_time": time_id,
                 "end_time": time_id + random.randint(60, 200),
@@ -1058,12 +1222,27 @@ class DataProcessor:
                 "timeperiod_is_default": 1,
             }
         elif "metric" in table.lower() and "centile" not in table.lower():
-            metric_values = self._generate_metric_values()
+            centile_values = self._generate_metric_values()
             data = {
                 "servicemetric_id": ids,
                 "time_id": time_id,
-                "liveservice_id": 1,
-                **metric_values,
+                "liveservice_id": liveservice_id,
+                **centile_values,
+                "total": round(random.uniform(90, 150), 6),
+                "warning_treshold": 200.0,
+                "critical_treshold": 400.0,
+            }
+            return data
+        elif (
+            "mod_bi_metriccentiledailyvalue" in table.lower()
+            or "mod_bi_metriccentileweeklyvalue" in table.lower()
+        ):
+            centile_values = self._generate_centile_values()
+            data = {
+                "servicemetric_id": ids,
+                "time_id": time_id,
+                "liveservice_id": liveservice_id,
+                **centile_values,
                 "total": round(random.uniform(90, 150), 6),
                 "warning_treshold": 200.0,
                 "critical_treshold": 400.0,
@@ -1072,14 +1251,16 @@ class DataProcessor:
 
         return None
 
-    def _create_hourly_row(self, table: str, time_id: int, ids: int) -> Dict:
+    def _create_hourly_row(
+        self, table: str, time_id: int, ids: int, liveservice_id: str
+    ) -> Dict:
         """Create an hourly row based on table type."""
         if "metric" in table.lower():
             metric_values = self._generate_metric_values()
             data = {
                 "servicemetric_id": ids,
                 "time_id": time_id,
-                "liveservice_id": 1,
+                "liveservice_id": liveservice_id,
                 **metric_values,
                 "total": round(random.uniform(90, 150), 6),
                 "warning_treshold": 50.0,
@@ -1095,22 +1276,38 @@ class DataProcessor:
         """Generate fake daily/monthly rows for availability or metric"""
         utc = pytz.UTC
         fake_rows = []
+        table = table.lower()
+
         l_ids_metrics = []
         l_ids_bas = []
         metric_name = self.config.metric_name
+        liveservice_id = self._fetch_liveservice_id(self.config.liveservice_name)
         l_ids_metrics = self._fetch_servicemetrics_ids(metric_name)
         l_ids_bas = self._fetch_ba_ids()
         l_ids_hosts = self._fetch_host_ids()
         l_ids_services = self._fetch_services_ids()
+        l_ids_hg = self._fetch_hostgroups_ids()
+        l_ids_hc = self._fetch_hostcategories_ids()
+        l_ids_sc = self._fetch_servicecategories_ids()
 
         ##### Monthly
         if is_monthly_table(table):
             base_time = utc.localize(datetime(target_date.year, target_date.month, 1))
             time_id = int(base_time.timestamp())
 
-            if "metric" in table.lower():
+            if "metric" in table:
                 for ids in l_ids_metrics:
-                    fake_row = self._create_daily_row(table, time_id, ids, "metric")
+                    fake_row = self._create_monthly_row(
+                        table, time_id, 0, 0, 0, ids, liveservice_id
+                    )
+                    if fake_row:
+                        fake_rows.append(fake_row)
+
+            if "monthavailability" in table:
+                for ids_hg, ids_hc, ids_sc in product(l_ids_hg, l_ids_hc, l_ids_sc):
+                    fake_row = self._create_monthly_row(
+                        table, time_id, ids_hg, ids_hc, ids_sc, 0, liveservice_id
+                    )
                     if fake_row:
                         fake_rows.append(fake_row)
 
@@ -1122,9 +1319,11 @@ class DataProcessor:
                 base_time = target_date.astimezone(pytz.UTC)
             time_id = int(base_time.timestamp())
 
-            if "metric" in table.lower() and "centile" not in table.lower():
+            if "metric" in table and "centile" not in table:
                 for ids in l_ids_metrics:
-                    fake_row = self._create_hourly_row(table, time_id, ids)
+                    fake_row = self._create_hourly_row(
+                        table, time_id, ids, liveservice_id
+                    )
                     if fake_row:
                         fake_rows.append(fake_row)
 
@@ -1135,39 +1334,51 @@ class DataProcessor:
             )
             time_id = int((base_time).timestamp())
 
-            if "hostavailability" in table.lower():
+            if "hostavailability" in table:
                 for ids in l_ids_hosts:
-                    fake_row = self._create_daily_row(table, time_id, ids, "host")
+                    fake_row = self._create_daily_row(
+                        table, time_id, ids, "host", liveservice_id
+                    )
                     if fake_row:
                         fake_rows.append(fake_row)
 
-            if "serviceavailability" in table.lower():
+            if "serviceavailability" in table:
                 for ids in l_ids_services:
-                    fake_row = self._create_daily_row(table, time_id, ids, "service")
+                    fake_row = self._create_daily_row(
+                        table, time_id, ids, "service", liveservice_id
+                    )
                     if fake_row:
                         fake_rows.append(fake_row)
 
-            if "servicestateevents" in table.lower():
+            if "servicestateevents" in table:
                 for ids in l_ids_services:
-                    fake_row = self._create_daily_row(table, time_id, ids, "service")
+                    fake_row = self._create_daily_row(
+                        table, time_id, ids, "service", liveservice_id
+                    )
                     if fake_row:
                         fake_rows.append(fake_row)
 
-            if "hoststateevents" in table.lower():
+            if "hoststateevents" in table:
                 for ids in l_ids_services:
-                    fake_row = self._create_daily_row(table, time_id, ids, "host")
+                    fake_row = self._create_daily_row(
+                        table, time_id, ids, "host", liveservice_id
+                    )
                     if fake_row:
                         fake_rows.append(fake_row)
 
-            if "_ba_" in table.lower():
+            if "_ba_" in table:
                 for ids in l_ids_bas:
-                    fake_row = self._create_daily_row(table, time_id, ids, "ba")
+                    fake_row = self._create_daily_row(
+                        table, time_id, ids, "ba", liveservice_id
+                    )
                     if fake_row:
                         fake_rows.append(fake_row)
 
-            if "metric" in table.lower() and "centile" not in table.lower():
+            if "metric" in table:
                 for ids in l_ids_metrics:
-                    fake_row = self._create_daily_row(table, time_id, ids, "metric")
+                    fake_row = self._create_daily_row(
+                        table, time_id, ids, "metric", liveservice_id
+                    )
                     if fake_row:
                         fake_rows.append(fake_row)
 
@@ -1483,7 +1694,6 @@ class DataWriter:
 
     def _insert_to_database(self, table: str, rows: List[Dict]) -> int:
         """Insert data to database in batches with columns and values aligned."""
-
         if not rows:
             return 0
 
@@ -1659,7 +1869,7 @@ def process_table(args: Tuple[Config, str]) -> Tuple[str, int, str, Dict]:
         src_idx = 0
 
         for missing_date in tqdm(missing_dates, desc=f"{table_name}", leave=False):
-            logger.info(f"Processing:{missing_date}")
+            logger.info(f"Processing {table_name}:{missing_date}")
             source_date = source_dates[src_idx % len(source_dates)]
             src_idx += 1
 
@@ -1735,17 +1945,21 @@ def main():
         help="Metric name to aggregate",
     )
     parser.add_argument(
+        "--liveservice-name",
+        type=str,
+        default="24x7",
+        help="liveservice name to aggregate",
+    )
+    parser.add_argument(
         "--db-central",
         action="store_true",
         help="Create needed resources in first",
     )
-
     parser.add_argument(
         "--truncate",
         action="store_true",
         help="Truncate desired tables",
     )
-
     args = parser.parse_args()
     config = Config(args)
 

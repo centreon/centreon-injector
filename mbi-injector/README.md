@@ -139,3 +139,5 @@ Available Options:
 --metric-name: Specific metric name to process (default: none)
 
 --truncate: Truncate table to overwrite aggregated data
+
+--liveservice-name: Specify timeperiod for aggregated data (default: 24x7)
