@@ -9,7 +9,7 @@ package-lock.json           @centreon/owners-react
 *.xml                       @centreon/owners-php
 **/composer.*               @centreon/owners-php
 
-*.feature                   @centreon/owners-gherkin
+*.feature                   @centreon/owners-cypress-e2e
 
 # Pipelines Codeowners rules
 .github/**                    @centreon/owners-pipelines
